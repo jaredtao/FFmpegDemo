@@ -5,7 +5,7 @@ TARGET = Player
 DEFINES += USE_OPENGL
 #DEFINES += OUT_VIDEO_TO_FILE
 win32{
-    FFMPEGPATH = G:/Code/FFMPEG/ffmpeg
+    FFMPEGPATH = $$PWD/../FFMPEG
 }
 unix{
     FFMPEGPATH = /usr/local/ffmpeg/shared

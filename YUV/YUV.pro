@@ -12,7 +12,7 @@ TARGET = YUV
 
 win32{
     DEFINES +=__STDC_FORMAT_MACROS
-    FFMPEGPATH = G:/Code/FFMPEG/ffmpeg
+    FFMPEGPATH = $$PWD/../FFMPEG
 }
 unix{
     FFMPEGPATH = /usr/local/ffmpeg/shared

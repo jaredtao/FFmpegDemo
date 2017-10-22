@@ -12,7 +12,7 @@ TARGET = Capture
 TEMPLATE = app
 
 win32{
-    FFMPEGPATH = G:/Code/FFMPEG/ffmpeg
+    FFMPEGPATH = $$PWD/../FFMPEG
 }
 unix{
     FFMPEGPATH = /usr/local/ffmpeg/shared

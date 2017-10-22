@@ -6,7 +6,7 @@
 
 TEMPLATE = app
 CONFIG += console c++11
-TARGET = Muxing
+TARGET = Remuxing
 
 
 
@@ -29,18 +29,14 @@ unix|win32: LIBS += -L$${FFMPEGPATH}/lib/ \
     -lavfilter \
     -lswscale
 
-
-SOURCES += main.cpp \
-    fileio.cpp \
-    stream.cpp \
-    audio.cpp \
-    video.cpp
-
 HEADERS += \
-    fileio.h \
-    stream.h \
-    common.h \
-    ffmpeg_muxer.h \
-    audio.h \
-    video.h
+    src/args.h \
+    src/ffmpegHeader.h
+
+SOURCES += \
+    src/args.cpp \
+    src/ffmpegHeader.cpp \
+    src/main.cpp
+
+
 

@@ -1,7 +1,7 @@
 TEMPLATE = app
 CONFIG += c++11 console
 win32{
-    FFMPEGPATH = G:/Code/FFMPEG/ffmpeg
+    FFMPEGPATH = $$PWD/../FFMPEG
 }
 unix{
     FFMPEGPATH = /usr/local/ffmpeg/shared

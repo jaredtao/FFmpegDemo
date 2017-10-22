@@ -11,7 +11,7 @@ CONFIG += console c++11
 TARGET = RGBToH264
 
 win32{
-    FFMPEGPATH = G:/Code/FFMPEG/ffmpeg
+    FFMPEGPATH = $$PWD/../FFMPEG
 }
 unix{
     FFMPEGPATH = /usr/local/ffmpeg/shared
