@@ -6,7 +6,7 @@
 #include <QWidget>
 #include <QPainter>
 #include <QImage>
-#include "encodertmp.h"
+#include "decodertmp.h"
 class Widget : public QWidget
 {
     Q_OBJECT

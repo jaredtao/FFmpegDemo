@@ -1,4 +1,4 @@
-#include "encodertmp.h"
+#include "decodertmp.h"
 #include <QDebug>
 #include <QCoreApplication>
 const char *url = "rtmp://192.168.1.154:1935/p/l live=1\0";

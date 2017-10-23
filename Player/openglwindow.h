@@ -10,7 +10,8 @@
 #include <QOpenGLTexture>
 #include <QTimer>
 #include <QTime>
-#include "encodertmp.h"
+#include "decodertmp.h"
+
 class OpenGLWindow :public QOpenGLWidget, protected QOpenGLFunctions
 {
     Q_OBJECT

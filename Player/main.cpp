@@ -12,9 +12,8 @@ int main(int argc, char * argv[])
     qSetMessagePattern("log[%{file} %{line} %{function} %{threadid}] %{message}");
     QApplication a(argc, argv);
 #ifdef USE_OPENGL
-	QSurfaceFormat format;
 	// asks for a OpenGL 3.2 debug context using the Core profile
-	format = QSurfaceFormat::defaultFormat();
+    auto format = QSurfaceFormat::defaultFormat();
 	format.setProfile(QSurfaceFormat::CoreProfile);
 	format.setOption(QSurfaceFormat::DebugContext);
 	QSurfaceFormat::setDefaultFormat(format);
