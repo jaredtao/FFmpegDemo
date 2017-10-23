@@ -38,7 +38,7 @@ static QFile outFile;
 
 static int parseArgs(int argc, char *argv[])
 {
-	if (argc < 1 || argv == nullptr) {
+    if (argc <= 1 || argv == nullptr) {
 		qDebug() << "parse args failed";
 		return -1;
 	}
@@ -110,8 +110,8 @@ static void write_out_frame()
 	uint8_t **pBuf = frame->data;
 	int *pStride = frame->linesize;
 	for (int i = 0; i < 3; i++) {
-		int w = i == 0 ? frame->width : frame->width/2;
-		int h = i == 0 ? frame->height : frame->height/2;
+        int w = (i == 0 ? frame->width : frame->width/2);
+        int h = (i == 0 ? frame->height : frame->height/2);
 		for (int j = 0; j < h; j++) {
 			outFile.write((const char *)pBuf[i], w);
 			pBuf[i] += pStride[i];

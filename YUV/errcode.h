@@ -1,5 +1,4 @@
-#ifndef ERRCODE_H
-#define ERRCODE_H
+#pragma once
 
 #define OPEN_FILE_FAILED -1
 
@@ -9,4 +8,4 @@
 #define FF_ALLOC_FRAME_FAILED -13
 #define FF_AV_IMAGE_ALLOC_FAILED -14
 #define FF_ENCODE_FAILED -15
-#endif // ERRCODE_H
+

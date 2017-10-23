@@ -32,7 +32,6 @@ protected:
 	void paintFPS();
 	void allocTexture(int fmt);
 
-signals:
 
 public slots:
 	void processVideoData(const QByteArray &data, int width, int height, int pixfmt);
