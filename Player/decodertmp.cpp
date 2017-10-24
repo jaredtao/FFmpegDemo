@@ -91,7 +91,6 @@ int DecodeRtmp::decode_packet(int & gotFrame, bool cached)
 			videoData.clear();
 			videoData.append((const char *)video.dest_data[0], video.dest_bufsize);
 			emit readyVideo(videoData, frame->width, frame->height, video.pix_format);
-
 		}
 	} else if (packet.stream_index == audio.streamIndex){
 		ret = avcodec_decode_audio4(audio.codecCtx, frame, &gotFrame, &packet);
@@ -122,6 +121,7 @@ int DecodeRtmp::init()
 	av_register_all();
 	avcodec_register_all();
 	avformat_network_init();
+    //这里的URL可以是网络地址，也可以是本地文件
 	ret = avformat_open_input(&FFmpeg.fmtCtx, url, NULL, NULL);
 
 	if (ret < 0) {

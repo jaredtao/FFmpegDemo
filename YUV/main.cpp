@@ -37,7 +37,7 @@ static QFile outFile;
 
 void parseArgs(int argc, char *argv[])
 {
-    if (argc <= 1 || argv == nullptr) {
+    if (argc <= 6 || argv == nullptr) {
         qDebug() << "parse args failed";
         return ;
     }
