@@ -1,10 +1,9 @@
-#ifndef ENCODERTMP_H
-#define ENCODERTMP_H
-
+#pragma once
 #include <QObject>
 #include <QByteArray>
 #include <QThread>
 #include <QFile>
+
 extern "C" {
 #include <libavcodec/avcodec.h>
 #include <libavformat/avformat.h>
@@ -12,6 +11,7 @@ extern "C" {
 #include <libavutil/imgutils.h>
 #include <libavutil/samplefmt.h>
 }
+
 #include <QContiguousCache>
 class DecodeRtmp : public QObject
 {
@@ -58,14 +58,14 @@ private:
 		QFile outFile;
 
 	} video;
-	struct _Audio :public _FFmpeg {
+    struct _Audio : public _FFmpeg {
 
 	}audio;
 	AVFrame *frame;
 	AVPacket packet;
 	QByteArray audioData, videoData;
 
-	int m_STOP;
+    int mStop;
 };
 typedef struct _VideoData{
     QByteArray data;
@@ -73,12 +73,13 @@ typedef struct _VideoData{
     int heigth;
     int pixfmt;
 }VideoData;
-class Work : public QObject
+
+class DecoderController : public QObject
 {
     Q_OBJECT
 public:
-    Work();
-    ~Work();
+    DecoderController();
+    ~DecoderController();
     VideoData getData(int &got);
 signals:
     void readyVideo(const QByteArray &data, int width, int height, int pixfmt);
@@ -89,8 +90,8 @@ public slots:
     void processVideo(const QByteArray &data, int width, int height, int pixfmt);
 private:
     QThread thread;
-    DecodeRtmp *himma;
+    DecodeRtmp *himma = nullptr;
 
     QContiguousCache <VideoData> cache;
 };
-#endif // ENCODERTMP_H
+

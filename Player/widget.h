@@ -1,5 +1,4 @@
-#ifndef WIDGET_H
-#define WIDGET_H
+#pragma once
 
 #include <QTimer>
 #include <QTime>
@@ -19,11 +18,10 @@ signals:
 public slots:
     void processVideoData(const QByteArray &data, int width, int height, int pixfmt);
 private:
-    QImage m_image;
-    QByteArray arrY, arrU, arrV;
+    QImage mImage;
+    QByteArray mArrY, mArrU, mArrV;
 
-    Work work;
+    DecoderController mDecoder;
 
 };
 
-#endif // WIDGET_H

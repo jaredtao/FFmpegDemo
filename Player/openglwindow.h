@@ -1,5 +1,4 @@
-#ifndef WINDOW_H
-#define WINDOW_H
+#pragma once
 
 #include <QOpenGLDebugLogger>
 #include <QOpenGLWidget>
@@ -22,30 +21,31 @@ protected:
 	void initializeGL() override;
 	void paintGL() override;
 	void resizeGL(int w, int h) override;
-	void timerEvent(QTimerEvent *event) override;
-	void initShaders();
-	void initTextures();
 
+	void timerEvent(QTimerEvent *event) override;
+
+    void initShaders();
+	void initTextures();
 	void initData();
 	void draw();
+
 	void calcFPS();
 	void updateFPS(qreal);
 	void paintFPS();
-	void allocTexture(int fmt);
 
-
+    void allocTexture(int fmt);
 public slots:
 	void processVideoData(const QByteArray &data, int width, int height, int pixfmt);
 	void handleLoggedMessage(QOpenGLDebugMessage message);
 private:
-	QOpenGLDebugLogger *logger;
-	GLint m_pixFmt;
-	QByteArray arrY, arrU, arrV;
+    QOpenGLDebugLogger *mLogger;
+    GLint mPixFmt;
+    QByteArray mArrY, mArrU, mArrV;
 
-	QOpenGLShaderProgram program;
-	QOpenGLTexture *texY, *texU, *texV;
-	QVector<QVector3D> vertices;
-	QVector<QVector2D> texcoords;
+    QOpenGLShaderProgram mProgram;
+    QOpenGLTexture *mTexY, *mTexU, *mTexV;
+    QVector<QVector3D> mVertices;
+    QVector<QVector2D> mTexcoords;
 	int mModelMatHandle, mViewMatHandle, mProjectMatHandle;
 	int mVerticesHandle;
 	int mTexCoordHandle;
@@ -54,11 +54,10 @@ private:
 	QMatrix4x4 mViewMatrix;
 	QMatrix4x4 mProjectionMatrix;
 
-	QTimer *timer;
-	qreal fps;
-	int frameNumber;
-	Work work;
-	bool isAlloced;
+    QTimer *mTimer;
+    qreal mFps;
+    int mFrameNumber;
+    DecoderController mDecoder;
+    bool mIsAlloced;
 };
 
-#endif // WINDOW_H

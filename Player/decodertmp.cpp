@@ -1,8 +1,8 @@
 #include "decodertmp.h"
 #include <QDebug>
 #include <QCoreApplication>
-const char *url = "rtmp://192.168.1.154:1935/p/l live=1\0";
-
+//const char *url = "rtmp://192.168.1.154:1935/p/l live=1\0";
+const char *url = "E:/AutoIO/Shared/Shared/video.mov";
 static void outError(int num)
 {
 	QByteArray error;
@@ -136,7 +136,7 @@ int DecodeRtmp::init()
 		return -1;
 	}
 	ret = open_codec_context(AVMEDIA_TYPE_VIDEO);
-	if ( ret >= 0 ){
+    if ( ret >= 0 ) {
 		video.streamIndex = ret;
 		video.codecCtx = FFmpeg.codecCtx;
 		video.stream = FFmpeg.stream;
@@ -162,6 +162,7 @@ int DecodeRtmp::init()
 	} else {
 		qDebug() << "open video context failed";
 	}
+
 	ret = open_codec_context(AVMEDIA_TYPE_AUDIO);
 	if ( ret>=0) {
 		audio.streamIndex = ret;
@@ -173,7 +174,7 @@ int DecodeRtmp::init()
 		//			qDebug() << "open audio output file failed";
 		//			return -3;
 		//		}
-		qDebug() << "open audip context success";
+        qDebug() << "open audio context success";
 	} else {
 		qDebug() << "open audio context failed";
 	}
@@ -207,11 +208,11 @@ void DecodeRtmp::decode()
 		if (get < 0) {
 			break;
 		}
-		if (m_STOP) {
+        if (mStop) {
 			goto stop;
 		}
 		do {
-			if (m_STOP) {
+            if (mStop) {
 				goto stop;
 			}
 			ret = decode_packet(gotFrame, false);
@@ -225,7 +226,7 @@ void DecodeRtmp::decode()
 	packet.data = nullptr;
 	packet.size = 0;
 	do {
-		if (m_STOP) {
+        if (mStop) {
 			goto stop;
 		}
 		ret = decode_packet(gotFrame, true);
@@ -251,7 +252,7 @@ void DecodeRtmp::release()
 }
 DecodeRtmp::DecodeRtmp(QObject *parent) : QObject(parent)
 {
-	m_STOP = 0;
+    mStop = 0;
 }
 DecodeRtmp::~DecodeRtmp()
 {
@@ -259,7 +260,7 @@ DecodeRtmp::~DecodeRtmp()
 }
 void DecodeRtmp::work()
 {
-	m_STOP = 0;
+    mStop = 0;
 	int ret = 0;
 	ret = init();
 	if (ret!=0) {
@@ -270,9 +271,9 @@ void DecodeRtmp::work()
 }
 void DecodeRtmp::stop()
 {
-	m_STOP = 1;
+    mStop = 1;
 }
-Work::Work()
+DecoderController::DecoderController()
 {
 	cache.setCapacity(20);
 	himma = new DecodeRtmp;
@@ -286,14 +287,14 @@ Work::Work()
 	connect(himma, SIGNAL(readyAudio(QByteArray)), this, SIGNAL(readyAudio(QByteArray)));
 	thread.start();
 }
-Work::~Work()
+DecoderController::~DecoderController()
 {
 	if (thread.isRunning()) {
 		thread.quit();
 //		thread.wait();
 	}
 }
-VideoData Work::getData(int &got)
+VideoData DecoderController::getData(int &got)
 {
 	if (cache.isEmpty()) {
 		got = 0;
@@ -302,7 +303,7 @@ VideoData Work::getData(int &got)
 	got = 1;
 	return cache.takeFirst();
 }
-void Work::processVideo(const QByteArray &data, int width, int height, int pixfmt)
+void DecoderController::processVideo(const QByteArray &data, int width, int height, int pixfmt)
 {
 	VideoData v;
 	v.data = data;
