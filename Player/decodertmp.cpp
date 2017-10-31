@@ -1,8 +1,8 @@
 #include "decodertmp.h"
 #include <QDebug>
 #include <QCoreApplication>
-//const char *url = "rtmp://192.168.1.154:1935/p/l live=1\0";
-const char *url = "E:/AutoIO/Shared/Shared/video.mov";
+const char *url = "rtmp://192.168.99.100:1935/p/l live=1\0";
+//const char *url = "E:/AutoIO/Shared/Shared/video.mov";
 static void outError(int num)
 {
 	QByteArray error;
@@ -282,16 +282,16 @@ DecoderController::DecoderController()
 	connect(this, SIGNAL(work()), himma, SLOT(work()));
 	connect(this, SIGNAL(stop()), himma, SLOT(stop()));
 	connect(this, SIGNAL(stop()), &thread, SIGNAL(finished()));
-	//	connect(himma, SIGNAL(readyVideo(QByteArray,int,int,int)), this, SIGNAL(readyVideo(QByteArray,int,int,int)));
-	connect(himma, SIGNAL(readyVideo(QByteArray,int,int,int)), this, SLOT(processVideo(QByteArray,int,int,int)));
+//        connect(himma, SIGNAL(readyVideo(QByteArray,int,int,int)), this, SIGNAL(readyVideo(QByteArray,int,int,int)));
+    connect(himma, SIGNAL(readyVideo(QByteArray,int,int,int)), this, SLOT(processVideo(QByteArray,int,int,int)));
 	connect(himma, SIGNAL(readyAudio(QByteArray)), this, SIGNAL(readyAudio(QByteArray)));
 	thread.start();
 }
 DecoderController::~DecoderController()
 {
 	if (thread.isRunning()) {
-		thread.quit();
-//		thread.wait();
+        thread.terminate();
+        thread.wait();
 	}
 }
 VideoData DecoderController::getData(int &got)

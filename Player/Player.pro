@@ -2,9 +2,10 @@ TEMPLATE = app
 CONFIG += c++11
 QT += core gui widgets quick qml
 TARGET = Player
-#DEFINES += USE_OPENGL
+DEFINES += USE_OPENGL
 #DEFINES += OUT_VIDEO_TO_FILE
 win32{
+    DEFINES +=__STDC_FORMAT_MACROS
     FFMPEGPATH = $$PWD/../FFMPEG
 }
 unix{

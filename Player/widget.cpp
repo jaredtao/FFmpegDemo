@@ -4,6 +4,10 @@ Widget::Widget(QWidget *parent) : QWidget(parent)
 {
 	connect(&mDecoder, SIGNAL(readyVideo(QByteArray,int,int,int)), this, SLOT(processVideoData(QByteArray,int,int,int)));
 	emit mDecoder.work();
+    startTimer(20);
+}
+Widget::~Widget() {
+    emit mDecoder.stop();
 }
 void Widget::paintEvent(QPaintEvent *event)
 {
@@ -13,6 +17,15 @@ void Widget::paintEvent(QPaintEvent *event)
     }
     QPainter paint(this);
     paint.drawImage(0,0, mImage.scaled(width(), height()));
+}
+
+void Widget::timerEvent(QTimerEvent *event)
+{
+    int ret = 0;
+    VideoData data = mDecoder.getData(ret);
+    if (0 != ret) {
+        processVideoData(data.data, data.width, data.heigth, data.pixfmt);
+    }
 }
 void Widget::processVideoData(const QByteArray &data, int width, int height, int pixfmt)
 {

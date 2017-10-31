@@ -20,7 +20,7 @@ OpenGLWindow::OpenGLWindow(QWidget *parent)
     mVertices.clear();
     mTexcoords.clear();
     mIsAlloced = false;
-	startTimer(50);
+    startTimer(50);
 }
 OpenGLWindow::~OpenGLWindow()
 {
@@ -113,14 +113,14 @@ void OpenGLWindow::processVideoData(const QByteArray &data, int width, int heigh
             mArrU = data.mid(width * height, width * height);
             mArrV = data.mid(width * height * 2, width * height);
             mPixFmt = 1;
-			qDebug()<< "yuv444p";
+//			qDebug()<< "yuv444p";
 			break;
 		case AV_PIX_FMT_YUV420P:
             mArrY = data.left(width * height);
             mArrU = data.mid(width * height, width * height/4);
             mArrV = data.mid(width * height* 5 / 4, width * height/4);
             mPixFmt = 0;
-			qDebug() << "yuv420p";
+//			qDebug() << "yuv420p";
 			break;
 		default:
 			qDebug() << "this format not support GPU speed up" << pixfmt;

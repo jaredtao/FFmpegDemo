@@ -5,11 +5,13 @@
 #include <QFile>
 
 extern "C" {
+#define __STDC_FORMAT_MACROS
 #include <libavcodec/avcodec.h>
 #include <libavformat/avformat.h>
 #include <libavutil/opt.h>
 #include <libavutil/imgutils.h>
 #include <libavutil/samplefmt.h>
+#include <stdint.h>
 }
 
 #include <QContiguousCache>

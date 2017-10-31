@@ -11,8 +11,10 @@ class Widget : public QWidget
     Q_OBJECT
 public:
     explicit Widget(QWidget *parent = 0);
+    ~Widget();
 protected:
     void paintEvent(QPaintEvent *event) override;
+    void timerEvent(QTimerEvent *event) override;
 signals:
 
 public slots:

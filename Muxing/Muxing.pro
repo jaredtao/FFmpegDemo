@@ -8,9 +8,8 @@ TEMPLATE = app
 CONFIG += console c++11
 TARGET = Muxing
 
-
-
 win32{
+    DEFINES +=__STDC_FORMAT_MACROS
     FFMPEGPATH = $$PWD/../FFMPEG
 }
 unix{
