@@ -3,50 +3,53 @@
 
 static QFile *inputVideoFile = NULL;
 
-static AVFrame* alloc_picture(enum AVPixelFormat fmt, int w, int h)
+static AVFrame *alloc_picture(enum AVPixelFormat fmt, int w, int h)
 {
     AVFrame *frame;
     frame = av_frame_alloc();
-    if (!frame) {
+    if (!frame)
+    {
         qDebug() << "frame alloc failed";
         return NULL;
     }
     frame->format = fmt;
-    frame->width  = w;
+    frame->width = w;
     frame->height = h;
     int ret = av_frame_get_buffer(frame, 32);
-    if (ret < 0) {
+    if (ret < 0)
+    {
         qDebug() << "get buffer failed";
         outError(ret);
         return NULL;
     }
     return frame;
-
 }
 
 int OpenVideo(AVFormatContext *fmtCtx, AVCodec *codec, OutputStream *st, FileIO &io)
 {
-    AVCodecContext *c= st->stream->codec;
+    AVCodecContext *c = st->stream->codec;
     int ret = avcodec_open2(c, codec, NULL);
-    if (ret < 0) {
+    if (ret < 0)
+    {
         qDebug() << "open video encode failed";
         outError(ret);
         return ret;
     }
 
     st->videoFrame = alloc_picture(c->pix_fmt, c->width, c->height);
-    if (!st->videoFrame) {
+    if (!st->videoFrame)
+    {
         qDebug() << "alloc video frame failed";
         return -2;
     }
     io.videoFile.setFileName(QString(io.inputVideoFileName));
-    if (!io.videoFile.open(QFile::ReadOnly)) {
-        qDebug() << "open audio file failed"<< io.videoFile.errorString();
+    if (!io.videoFile.open(QFile::ReadOnly))
+    {
+        qDebug() << "open audio file failed" << io.videoFile.errorString();
         return -3;
     }
     inputVideoFile = &io.videoFile;
     return 0;
-
 }
 static int write_frame(AVFormatContext *fmt_ctx, const AVRational *time_base, AVStream *st, AVPacket *pkt)
 {
@@ -64,9 +67,9 @@ static void fill_yuv_image(AVFrame *pict, int frame_index, int width, int height
     int x, y, i, ret;
 
     /* when we pass a frame to the encoder, it may keep a reference to it
-    * internally;
-    * make sure we do not overwrite it here
-    */
+     * internally;
+     * make sure we do not overwrite it here
+     */
     ret = av_frame_make_writable(pict);
     if (ret < 0)
     {
@@ -166,7 +169,7 @@ int Write_video_frame(AVFormatContext *oc, OutputStream *ost)
 
     if (ret < 0)
     {
-        qDebug()<< "Error while writing video frame: %d\n";
+        qDebug() << "Error while writing video frame: %d\n";
         outError(ret);
         exit(1);
     }

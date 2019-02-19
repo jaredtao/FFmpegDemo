@@ -5,7 +5,8 @@
 #include <QMainWindow>
 #include <QThread>
 #include <QTimer>
-namespace Ui {
+namespace Ui
+{
 class MainWindow;
 }
 
@@ -33,11 +34,11 @@ private slots:
 private:
     Ui::MainWindow *ui;
 
-    QTimer  *m_timer;
+    QTimer *m_timer;
 
     int currentIndex;
 
-    VideoDec    *dec;
+    VideoDec *dec;
     QThread *m_thread;
 
     QPixmap *pixmap;

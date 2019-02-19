@@ -1,8 +1,9 @@
 #include "args.h"
 #include <QDebug>
-int Hello(FileIO & io, int argc, char * argv[])
+int Hello(FileIO &io, int argc, char *argv[])
 {
-    if (argc <=2|| argv == nullptr) {
+    if (argc <= 2 || argv == nullptr)
+    {
         qDebug() << "USAGE: inputFileName outputFileName";
         return -1;
     }

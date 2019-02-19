@@ -1,11 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QFileDialog>
 #include <QDebug>
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow),
-    pixmap(nullptr)
+#include <QFileDialog>
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow), pixmap(nullptr)
 {
     ui->setupUi(this);
     dec = new VideoDec;
@@ -26,12 +23,14 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-	qDebug() <<__FUNCTION__;
-    if (m_thread->isRunning()) {
+    qDebug() << __FUNCTION__;
+    if (m_thread->isRunning())
+    {
         m_thread->quit();
         m_thread->wait();
     }
-    if (pixmap) {
+    if (pixmap)
+    {
         delete pixmap;
         pixmap = nullptr;
     }
@@ -46,33 +45,33 @@ void MainWindow::addVide(QImage image)
 }
 void MainWindow::refresh()
 {
-    if (currentIndex < videos.size()) {
+    if (currentIndex < videos.size())
+    {
         pixmap->convertFromImage(videos[currentIndex]);
         ui->label_image->setPixmap(*pixmap);
         currentIndex++;
-    } else {
+    }
+    else
+    {
         qDebug() << "index bigger than videos ";
         m_timer->stop();
     }
 }
 void MainWindow::on_pushButton_open_clicked()
 {
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),
-                                                      "",
-													  tr("Video (*.avi *.rmvb *.rm *.mp4 *.*)"));
-    if (fileName.isNull()) {
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "", tr("Video (*.avi *.rmvb *.rm *.mp4 *.*)"));
+    if (fileName.isNull())
+    {
         qDebug() << "filename is empty";
-        return ;
+        return;
     }
     emit setFilename(fileName);
-	emit setMaxBufsize(500);
+    emit setMaxBufsize(500);
     emit init();
     emit play();
-
-
 }
 
 void MainWindow::on_pushButton_play_clicked()
 {
-	m_timer->start(50);
+    m_timer->start(50);
 }

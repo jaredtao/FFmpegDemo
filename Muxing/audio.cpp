@@ -2,14 +2,14 @@
 
 static QFile *inputVideoFile = NULL;
 
-static AVFrame * alloc_audio_frame(enum AVSampleFormat sample_fmt, uint64_t channel_layout,	int sample_rate, int nb_samples)
+static AVFrame *alloc_audio_frame(enum AVSampleFormat sample_fmt, uint64_t channel_layout, int sample_rate, int nb_samples)
 {
     AVFrame *frame = av_frame_alloc();
     int ret;
 
     if (!frame)
     {
-        qDebug() <<"Error allocating an audio frame\n";
+        qDebug() << "Error allocating an audio frame\n";
         exit(1);
     }
 
@@ -23,7 +23,7 @@ static AVFrame * alloc_audio_frame(enum AVSampleFormat sample_fmt, uint64_t chan
         ret = av_frame_get_buffer(frame, 0);
         if (ret < 0)
         {
-            qDebug() <<"Error allocating an audio buffer\n";
+            qDebug() << "Error allocating an audio buffer\n";
             exit(1);
         }
     }
@@ -87,7 +87,8 @@ int OpenAudio(AVFormatContext *oc, AVCodec *codec, OutputStream *ost, FileIO &io
         exit(1);
     }
     io.audioFile.setFileName(QString(io.inputAudioFileName));
-    if (!io.audioFile.open(QFile::ReadOnly)) {
+    if (!io.audioFile.open(QFile::ReadOnly))
+    {
         qDebug() << "open audio file failed";
         return -3;
     }
@@ -106,17 +107,17 @@ static int write_frame(AVFormatContext *fmt_ctx, const AVRational *time_base, AV
 }
 
 /* Prepare a 16 bit dummy audio frame of 'frame_size' samples and
-* 'nb_channels' channels. */
+ * 'nb_channels' channels. */
 static AVFrame *get_audio_frame(OutputStream *ost)
 {
     AVFrame *frame = ost->tmp_frame;
     int j, i, v;
-    int16_t *q = (int16_t*)frame->data[0];
+    int16_t *q = (int16_t *)frame->data[0];
 
     {
         AVRational r = { 1, 1 };
         /* check if we want to generate more frames */
-        if (av_compare_ts(ost->nextPts, ost->stream->codec->time_base,	STREAM_DURATION, r) >= 0)
+        if (av_compare_ts(ost->nextPts, ost->stream->codec->time_base, STREAM_DURATION, r) >= 0)
             return NULL;
     }
 
@@ -157,17 +158,15 @@ int Write_audio_frame(AVFormatContext *oc, OutputStream *ost)
         av_assert0(dst_nb_samples == frame->nb_samples);
 
         /* when we pass a frame to the encoder, it may keep a reference to it
-        * internally;
-        * make sure we do not overwrite it here
-        */
+         * internally;
+         * make sure we do not overwrite it here
+         */
         ret = av_frame_make_writable(ost->audioFrame);
         if (ret < 0)
             exit(1);
 
         /* convert to destination format */
-        ret = swr_convert(ost->swr_ctx,
-            ost->audioFrame->data, dst_nb_samples,
-            (const uint8_t **)frame->data, frame->nb_samples);
+        ret = swr_convert(ost->swr_ctx, ost->audioFrame->data, dst_nb_samples, (const uint8_t **)frame->data, frame->nb_samples);
         if (ret < 0)
         {
             fprintf(stderr, "Error while converting\n");

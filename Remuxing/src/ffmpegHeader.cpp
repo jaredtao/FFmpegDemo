@@ -1,6 +1,6 @@
 #include "ffmpegHeader.h"
-#include <QDebug>
 #include <QByteArray>
+#include <QDebug>
 void outError(int num)
 {
     QByteArray error;
