@@ -33,6 +33,7 @@
 * **Player**
 
   一个综合的例子
+
   拉流rtmp, 解码到yuv420p/yuv444p, OpenGL 转码rgb并显示
 
   其中rtmp服务器地址可以换成本地视频文件路径.
