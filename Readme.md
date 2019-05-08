@@ -12,7 +12,7 @@
 
 * **Capture**
 
-  读取本地视频文件并播放 （这个可能不好用，直接看最后一个Player）
+  读取本地视频文件并播放 （这个不好用了，直接看最后一个Player）
 
 * **RGBToH264**
 
@@ -50,7 +50,7 @@
 | QQ、TIM   | 759378563                      |
 | 微信 | xsd2410421                       |
 | 邮箱 | jared2020@163.com                |
-| blog | https://wentaojia2014.github.io/ |
+| blog | https://jaredtao.github.io/ |
 
 ***
 
