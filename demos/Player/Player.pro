@@ -4,24 +4,8 @@ QT += core gui widgets quick qml
 TARGET = Player
 DEFINES += USE_OPENGL
 #DEFINES += OUT_VIDEO_TO_FILE
-win32{
-    DEFINES +=__STDC_FORMAT_MACROS
-    FFMPEGPATH = $$PWD/../FFMPEG
-}
-unix{
-    FFMPEGPATH = /usr/local/ffmpeg/shared
-}
-INCLUDEPATH += $${FFMPEGPATH}/include
-DEPENDPATH += $${FFMPEGPATH}/include
 
-LIBS += -L$${FFMPEGPATH}/lib -lavcodec \
-    -lavdevice \
-    -lavfilter \
-    -lavformat \
-    -lavutil \
-    -lpostproc \
-    -lswresample \
-    -lswscale
+include($$PWD/../../FFmpegDemoConfig.pri)
 
 SOURCES += main.cpp \
     widget.cpp \

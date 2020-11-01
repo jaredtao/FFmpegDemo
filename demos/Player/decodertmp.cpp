@@ -1,8 +1,9 @@
 #include "decodertmp.h"
 #include <QCoreApplication>
 #include <QDebug>
-const char *url = "rtmp://192.168.99.100:1935/p/l live=1\0";
+//const char *url = "rtmp://192.168.99.100:1935/p/l live=1\0";
 // const char *url = "E:/AutoIO/Shared/Shared/video.mov";
+static const QString url = QString(ResPath) + "video.mov";
 static void outError(int num)
 {
     QByteArray error;
@@ -137,7 +138,7 @@ int DecodeRtmp::init()
     avcodec_register_all();
     avformat_network_init();
     //这里的URL可以是网络地址，也可以是本地文件
-    ret = avformat_open_input(&FFmpeg.fmtCtx, url, NULL, NULL);
+    ret = avformat_open_input(&FFmpeg.fmtCtx, url.toUtf8().constData(), NULL, NULL);
 
     if (ret < 0)
     {
@@ -211,7 +212,7 @@ int DecodeRtmp::init()
     {
         qDebug() << "Demuxing audio ";
     }
-    av_dump_format(FFmpeg.fmtCtx, 0, url, 0);
+    av_dump_format(FFmpeg.fmtCtx, 0, url.toUtf8().constData(), 0);
     if (!video.stream && !audio.stream)
     {
         qDebug() << "Could not find audio or video stream.";

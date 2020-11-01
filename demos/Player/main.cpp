@@ -10,12 +10,16 @@
 int main(int argc, char *argv[])
 {
     qSetMessagePattern("log[%{file} %{line} %{function} %{threadid}] %{message}");
-    QApplication a(argc, argv);
+    QApplication app(argc, argv);
+    app.setOrganizationName("Tao");
+    app.setOrganizationDomain("Tao");
+
 #ifdef USE_OPENGL
     // asks for a OpenGL 3.2 debug context using the Core profile
     auto format = QSurfaceFormat::defaultFormat();
     format.setProfile(QSurfaceFormat::CoreProfile);
     format.setOption(QSurfaceFormat::DebugContext);
+    format.setSamples(8);
     QSurfaceFormat::setDefaultFormat(format);
 
     OpenGLWindow w;
@@ -24,5 +28,5 @@ int main(int argc, char *argv[])
     Widget widget;
     widget.show();
 #endif
-    return a.exec();
+    return app.exec();
 }

@@ -3,7 +3,8 @@
 #include "libavformat/avformat.h"
 #include <QPainter>
 #include <string.h>
-OpenGLWindow::OpenGLWindow(QWidget *parent) : QOpenGLWidget(parent), mLogger(0), mTexY(0), mTexU(0), mTexV(0), mTimer(0)
+OpenGLWindow::OpenGLWindow(QWidget *parent)
+    : QOpenGLWidget(parent), mLogger(0), mTexY(0), mTexU(0), mTexV(0), mTimer(0)
 {
     mFps = 0;
     mFrameNumber = 0;
@@ -20,14 +21,12 @@ OpenGLWindow::~OpenGLWindow()
 {
     emit mDecoder.stop();
     makeCurrent();
-    if (mLogger)
-    {
+    if (mLogger) {
         mLogger->stopLogging();
         delete mLogger;
         mLogger = NULL;
     }
-    if (mTexY)
-    {
+    if (mTexY) {
         if (mTexY->isBound())
             mTexY->release();
         if (mTexY->isCreated())
@@ -35,8 +34,7 @@ OpenGLWindow::~OpenGLWindow()
         delete mTexY;
         mTexY = nullptr;
     }
-    if (mTexU)
-    {
+    if (mTexU) {
         if (mTexU->isBound())
             mTexU->release();
         if (mTexU->isCreated())
@@ -44,8 +42,7 @@ OpenGLWindow::~OpenGLWindow()
         delete mTexU;
         mTexU = nullptr;
     }
-    if (mTexV)
-    {
+    if (mTexV) {
         if (mTexV->isBound())
             mTexV->release();
         if (mTexV->isCreated())
@@ -53,8 +50,7 @@ OpenGLWindow::~OpenGLWindow()
         delete mTexV;
         mTexV = nullptr;
     }
-    if (mTimer)
-    {
+    if (mTimer) {
         mTimer->stop();
         delete mTimer;
         mTimer = NULL;
@@ -66,8 +62,7 @@ void OpenGLWindow::timerEvent(QTimerEvent *event)
     Q_UNUSED(event)
     int ret = 0;
     VideoData data = mDecoder.getData(ret);
-    if (0 != ret)
-    {
+    if (0 != ret) {
         processVideoData(data.data, data.width, data.heigth, data.pixfmt);
     }
 }
@@ -75,7 +70,7 @@ void OpenGLWindow::initializeGL()
 {
     initializeOpenGLFunctions();
 
-    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+    glClearColor(0.2f, 0.3f, 0.4f, 1.0f);
     resize(width(), height());
 
     glDepthMask(GL_TRUE);
@@ -87,17 +82,16 @@ void OpenGLWindow::initializeGL()
     mLogger = new QOpenGLDebugLogger(this->context());
 
     bool ret = mLogger->initialize(); // initializes in the current context, i.e. ctx
-    if (ret)
-    {
-        connect(mLogger, SIGNAL(messageLogged(QOpenGLDebugMessage)), this, SLOT(handleLoggedMessage(QOpenGLDebugMessage)));
+    if (ret) {
+        connect(mLogger, SIGNAL(messageLogged(QOpenGLDebugMessage)), this,
+                SLOT(handleLoggedMessage(QOpenGLDebugMessage)));
         mLogger->startLogging();
-    }
-    else
-    {
+    } else {
         qDebug() << "logger initialize failed";
     }
-    mModelMatrix.setToIdentity();
-    //	connect(&work, SIGNAL(readyVideo(QByteArray,int,int,int)), this, SLOT(processVideoData(QByteArray,int,int,int)));
+
+    //	connect(&work, SIGNAL(readyVideo(QByteArray,int,int,int)), this,
+    //SLOT(processVideoData(QByteArray,int,int,int)));
     emit mDecoder.work();
 }
 void OpenGLWindow::handleLoggedMessage(QOpenGLDebugMessage message)
@@ -110,26 +104,25 @@ void OpenGLWindow::processVideoData(const QByteArray &data, int width, int heigh
     mArrU.clear();
     mArrV.clear();
 
-    switch (pixfmt)
-    {
-        case AV_PIX_FMT_YUV444P:
-            mArrY = data.left(width * height);
-            mArrU = data.mid(width * height, width * height);
-            mArrV = data.mid(width * height * 2, width * height);
-            mPixFmt = 1;
-            //			qDebug()<< "yuv444p";
-            break;
-        case AV_PIX_FMT_YUV420P:
-            mArrY = data.left(width * height);
-            mArrU = data.mid(width * height, width * height / 4);
-            mArrV = data.mid(width * height * 5 / 4, width * height / 4);
-            mPixFmt = 0;
-            //			qDebug() << "yuv420p";
-            break;
-        default:
-            qDebug() << "this format not support GPU speed up" << pixfmt;
-            return;
-            break;
+    switch (pixfmt) {
+    case AV_PIX_FMT_YUV444P:
+        mArrY = data.left(width * height);
+        mArrU = data.mid(width * height, width * height);
+        mArrV = data.mid(width * height * 2, width * height);
+        mPixFmt = 1;
+        //			qDebug()<< "yuv444p";
+        break;
+    case AV_PIX_FMT_YUV420P:
+        mArrY = data.left(width * height);
+        mArrU = data.mid(width * height, width * height / 4);
+        mArrV = data.mid(width * height * 5 / 4, width * height / 4);
+        mPixFmt = 0;
+        //			qDebug() << "yuv420p";
+        break;
+    default:
+        qDebug() << "this format not support GPU speed up" << pixfmt;
+        return;
+        break;
     }
 
     resize(width, height);
@@ -166,13 +159,11 @@ void OpenGLWindow::resizeGL(int w, int h)
 
 void OpenGLWindow::initShaders()
 {
-    if (!mProgram.addShaderFromSourceFile(QOpenGLShader::Vertex, ":/vertex.vsh"))
-    {
+    if (!mProgram.addShaderFromSourceFile(QOpenGLShader::Vertex, ":/vertex.vsh")) {
         qDebug() << __FILE__ << __FUNCTION__ << " add vertex shader file failed.";
         return;
     }
-    if (!mProgram.addShaderFromSourceFile(QOpenGLShader::Fragment, ":/fragment.fsh"))
-    {
+    if (!mProgram.addShaderFromSourceFile(QOpenGLShader::Fragment, ":/fragment.fsh")) {
         qDebug() << __FILE__ << __FUNCTION__ << " add fragment shader file failed.";
         return;
     }
@@ -186,21 +177,21 @@ void OpenGLWindow::initTextures()
     // yuv420p
     mTexY = new QOpenGLTexture(QOpenGLTexture::Target2D);
     mTexY->setFormat(QOpenGLTexture::LuminanceFormat);
-    mTexY->setFixedSamplePositions(false);
+    //    mTexY->setFixedSamplePositions(false);
     mTexY->setMinificationFilter(QOpenGLTexture::Nearest);
     mTexY->setMagnificationFilter(QOpenGLTexture::Nearest);
     mTexY->setWrapMode(QOpenGLTexture::ClampToEdge);
 
     mTexU = new QOpenGLTexture(QOpenGLTexture::Target2D);
     mTexU->setFormat(QOpenGLTexture::LuminanceFormat);
-    mTexU->setFixedSamplePositions(false);
+    //    mTexU->setFixedSamplePositions(false);
     mTexU->setMinificationFilter(QOpenGLTexture::Nearest);
     mTexU->setMagnificationFilter(QOpenGLTexture::Nearest);
     mTexU->setWrapMode(QOpenGLTexture::ClampToEdge);
 
     mTexV = new QOpenGLTexture(QOpenGLTexture::Target2D);
     mTexV->setFormat(QOpenGLTexture::LuminanceFormat);
-    mTexV->setFixedSamplePositions(false);
+    //    mTexV->setFixedSamplePositions(false);
     mTexV->setMinificationFilter(QOpenGLTexture::Nearest);
     mTexV->setMagnificationFilter(QOpenGLTexture::Nearest);
     mTexV->setWrapMode(QOpenGLTexture::ClampToEdge);
@@ -209,8 +200,7 @@ void OpenGLWindow::allocTexture(int fmt)
 {
     int w = width();
     int h = height();
-    if (fmt == 0)
-    {
+    if (fmt == 0) {
         // yuv420p
         mTexY->setSize(w, h);
         mTexY->allocateStorage(QOpenGLTexture::Luminance, QOpenGLTexture::UInt8);
@@ -220,9 +210,7 @@ void OpenGLWindow::allocTexture(int fmt)
 
         mTexV->setSize(w / 2, h / 2);
         mTexV->allocateStorage(QOpenGLTexture::Luminance, QOpenGLTexture::UInt8);
-    }
-    else
-    {
+    } else {
         // yuv444p
         mTexY->setSize(w, h);
         mTexY->allocateStorage(QOpenGLTexture::Luminance, QOpenGLTexture::UInt8);
@@ -237,33 +225,32 @@ void OpenGLWindow::allocTexture(int fmt)
 }
 void OpenGLWindow::initData()
 {
-    mVertices << QVector3D(-1, 1, 0.0f) << QVector3D(1, 1, 0.0f) << QVector3D(1, -1, 0.0f) << QVector3D(-1, -1, 0.0f);
+    mVertices << QVector3D(-1, 1, 0.0f) << QVector3D(1, 1, 0.0f) << QVector3D(1, -1, 0.0f)
+              << QVector3D(-1, -1, 0.0f);
     mTexcoords << QVector2D(0, 0) << QVector2D(1, 0) << QVector2D(1, 1) << QVector2D(0, 1);
 
     mViewMatrix.setToIdentity();
-    mViewMatrix.lookAt(QVector3D(0.0f, 0.0f, 1.001f), QVector3D(0.0f, 0.0f, -5.0f), QVector3D(0.0f, 1.0f, 0.0f));
+    mViewMatrix.lookAt(QVector3D(0.0f, 0.0f, 1.001f), QVector3D(0.0f, 0.0f, -5.0f),
+                       QVector3D(0.0f, 1.0f, 0.0f));
+    mModelMatrix.setToIdentity();
 }
 
 void OpenGLWindow::draw()
 {
 
-    if (mArrY.size() <= 0)
-    {
+    if (mArrY.size() <= 0) {
         qDebug() << "y array is empty";
         return;
     }
-    if (mArrU.size() <= 0)
-    {
+    if (mArrU.size() <= 0) {
         qDebug() << "u array is empty";
         return;
     }
-    if (mArrV.size() <= 0)
-    {
+    if (mArrV.size() <= 0) {
         qDebug() << "v array is empty";
         return;
     }
-    if (!mIsAlloced)
-    {
+    if (!mIsAlloced) {
         return;
     }
     //	static int once = allocTexture();
@@ -289,8 +276,7 @@ void OpenGLWindow::draw()
     // pixFmt
     mProgram.setUniformValue("pixFmt", mPixFmt);
     //纹理
-    if (mPixFmt == 1)
-    {
+    if (mPixFmt == 1) {
         // yuv444p
         mTexY->setData(QOpenGLTexture::Luminance, QOpenGLTexture::UInt8, mArrY.data());
         mTexU->setData(QOpenGLTexture::Luminance, QOpenGLTexture::UInt8, mArrU.data());
@@ -310,15 +296,14 @@ void OpenGLWindow::draw()
         glActiveTexture(GL_TEXTURE2);
         mTexV->bind();
         mProgram.setUniformValue("tex_v", 2);
-    }
-    else
-    {
+    } else {
         // yuv420p
 
         // Y
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, mTexY->textureId());
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, width(), height(), 0, GL_RED, GL_UNSIGNED_BYTE, mArrY.data());
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, width(), height(), 0, GL_RED, GL_UNSIGNED_BYTE,
+                     mArrY.data());
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -327,7 +312,8 @@ void OpenGLWindow::draw()
         // U
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, mTexU->textureId());
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, width() / 2, height() / 2, 0, GL_RED, GL_UNSIGNED_BYTE, mArrU.data());
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, width() / 2, height() / 2, 0, GL_RED,
+                     GL_UNSIGNED_BYTE, mArrU.data());
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -335,7 +321,8 @@ void OpenGLWindow::draw()
         // V
         glActiveTexture(GL_TEXTURE2);
         glBindTexture(GL_TEXTURE_2D, mTexV->textureId());
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, width() / 2, height() / 2, 0, GL_RED, GL_UNSIGNED_BYTE, mArrV.data());
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, width() / 2, height() / 2, 0, GL_RED,
+                     GL_UNSIGNED_BYTE, mArrV.data());
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -361,8 +348,7 @@ void OpenGLWindow::calcFPS()
         return 0;
     }();
     static int frame = 0;
-    if (frame++ > 100)
-    {
+    if (frame++ > 100) {
         qreal elasped = time.elapsed();
         updateFPS(frame / elasped * 1000);
         time.restart();
@@ -379,5 +365,6 @@ void OpenGLWindow::paintFPS()
     QPainter painter(this);
     painter.setPen(Qt::green);
     painter.setRenderHint(QPainter::TextAntialiasing);
-    painter.drawText(10, 10, QString("FPS:%1 %2").arg(QString::number(mFps, 'f', 3)).arg(mFrameNumber));
+    painter.drawText(10, 10,
+                     QString("FPS:%1 %2").arg(QString::number(mFps, 'f', 3)).arg(mFrameNumber));
 }
