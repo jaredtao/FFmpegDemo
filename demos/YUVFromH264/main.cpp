@@ -1,8 +1,7 @@
 #include <QDebug>
 #include <QFile>
 #include <QString>
-extern "C"
-{
+extern "C" {
 #include <libavcodec/avcodec.h>
 #include <libavformat/avformat.h>
 #include <libavutil/imgutils.h>
@@ -21,12 +20,16 @@ struct _Args
     int height;
     int bitrate;
     int frameToEncode;
-    _Args() : inputFileName(""), outputFileName(""), width(0), height(0), bitrate(0), frameToEncode(0) {}
-} Args;
+    _Args()
+        : inputFileName(""), outputFileName(""), width(0), height(0), bitrate(0), frameToEncode(0)
+    {
+    }
+} gArgs;
 QDebug operator<<(QDebug dbg, const _Args &args)
 {
     QDebugStateSaver saver(dbg);
-    dbg.noquote() << args.inputFileName << args.outputFileName << args.width << args.height << args.bitrate << args.frameToEncode;
+    dbg.noquote() << args.inputFileName << args.outputFileName << args.width << args.height
+                  << args.bitrate << args.frameToEncode;
     return dbg;
 }
 static AVCodec *codec = nullptr;
@@ -39,13 +42,14 @@ static QFile outFile;
 
 static int parseArgs(int argc, char *argv[])
 {
-    if (argc <= 1 || argv == nullptr)
-    {
-        qDebug() << "parse args failed";
-        return -1;
+    if (argc <= 1 || argv == nullptr) {
+        qDebug() << "parse args failed, use default";
+        gArgs.inputFileName = QString(ResPath) + QString("flower_cif.h264");
+        gArgs.outputFileName = QString(ResPath) + QString("flower_cif_fromh264.yuv");
+        return 0;
     }
-    Args.inputFileName = argv[1];
-    Args.outputFileName = argv[2];
+    gArgs.inputFileName = argv[1];
+    gArgs.outputFileName = argv[2];
     //	Args.width = atoi( argv[3]);
     //	Args.height = atoi(argv[4]);
     //	Args.bitrate = atoi(argv[5]);
@@ -55,52 +59,44 @@ static int parseArgs(int argc, char *argv[])
 
 static int init()
 {
-    inFile.setFileName(Args.inputFileName);
-    if (!inFile.open(QFile::ReadOnly))
-    {
+    inFile.setFileName(gArgs.inputFileName);
+    if (!inFile.open(QFile::ReadOnly)) {
         qDebug() << __FILE__ << __LINE__ << "open input file failed";
         return -1;
     }
-    outFile.setFileName(Args.outputFileName);
-    if (!outFile.open(QFile::ReadWrite))
-    {
+    outFile.setFileName(gArgs.outputFileName);
+    if (!outFile.open(QFile::ReadWrite)) {
         qDebug() << __FILE__ << __LINE__ << "open output file failed";
         return -1;
     }
-    av_register_all();
+//    av_register_all();
     av_init_packet(&packet);
     codec = avcodec_find_decoder(AV_CODEC_ID_H264);
-    if (NULL == codec)
-    {
+    if (NULL == codec) {
         qDebug() << "codec find failed";
         return -1;
     }
     codecCtx = avcodec_alloc_context3(codec);
-    if (codecCtx == nullptr)
-    {
+    if (codecCtx == nullptr) {
         qDebug() << "codecCtx find failed";
         return -2;
     }
-    if (codec->capabilities & AV_CODEC_CAP_TRUNCATED)
-    {
+    if (codec->capabilities & AV_CODEC_CAP_TRUNCATED) {
         codecCtx->flags |= AV_CODEC_CAP_TRUNCATED;
     }
     codecParserCtx = av_parser_init(AV_CODEC_ID_H264);
-    if (codecParserCtx == nullptr)
-    {
+    if (codecParserCtx == nullptr) {
         qDebug() << "parser context init failed";
         return -3;
     }
 
-    if (avcodec_open2(codecCtx, codec, NULL) < 0)
-    {
+    if (avcodec_open2(codecCtx, codec, NULL) < 0) {
         qDebug() << "codec open failed";
         return -4;
     }
 
     frame = av_frame_alloc();
-    if (frame == nullptr)
-    {
+    if (frame == nullptr) {
         qDebug() << "frame alloc falied";
         return -5;
     }
@@ -119,12 +115,10 @@ static void write_out_frame()
 {
     uint8_t **pBuf = frame->data;
     int *pStride = frame->linesize;
-    for (int i = 0; i < 3; i++)
-    {
+    for (int i = 0; i < 3; i++) {
         int w = (i == 0 ? frame->width : frame->width / 2);
         int h = (i == 0 ? frame->height : frame->height / 2);
-        for (int j = 0; j < h; j++)
-        {
+        for (int j = 0; j < h; j++) {
             outFile.write((const char *)pBuf[i], w);
             pBuf[i] += pStride[i];
         }
@@ -140,45 +134,38 @@ int main(int argc, char *argv[])
     uint8_t inBuf[INBUF_SIZE + AV_INPUT_BUFFER_PADDING_SIZE];
     memset(inBuf, 0, INBUF_SIZE + AV_INPUT_BUFFER_PADDING_SIZE);
 
-    if (parseArgs(argc, argv) < 0)
-    {
+    if (parseArgs(argc, argv) < 0) {
         qDebug() << "args parse failed";
         return -1;
     }
-    qDebug() << Args;
-    if (init() < 0)
-    {
+    qDebug() << gArgs;
+    if (init() < 0) {
         qDebug() << "init failed";
         return -1;
     }
     packet.data = NULL;
     packet.size = 0;
-    forever
-    {
+    forever {
         uDataSize = inFile.read((char *)inBuf, INBUF_SIZE);
-        if (uDataSize <= 0)
-        {
+        if (uDataSize <= 0) {
             break;
         }
         pDataPtr = inBuf;
-        while (uDataSize > 0)
-        {
-            len = av_parser_parse2(codecParserCtx, codecCtx, &packet.data, &packet.size, pDataPtr, uDataSize, AV_NOPTS_VALUE, AV_NOPTS_VALUE, AV_NOPTS_VALUE);
+        while (uDataSize > 0) {
+            len = av_parser_parse2(codecParserCtx, codecCtx, &packet.data, &packet.size, pDataPtr,
+                                   uDataSize, AV_NOPTS_VALUE, AV_NOPTS_VALUE, AV_NOPTS_VALUE);
 
             pDataPtr += len;
             uDataSize -= len;
-            if (0 == packet.size)
-            {
+            if (0 == packet.size) {
                 continue;
             }
             int ret = avcodec_decode_video2(codecCtx, frame, &got_picture, &packet);
-            if (ret < 0)
-            {
+            if (ret < 0) {
                 qDebug() << "decode  failed";
                 return ret;
             }
-            if (got_picture)
-            {
+            if (got_picture) {
                 write_out_frame();
                 qDebug() << "Succeed to decode 1 frame ! Frame pts: " << packet.pts;
             }
@@ -186,21 +173,16 @@ int main(int argc, char *argv[])
     }
     packet.data = NULL;
     packet.size = 0;
-    forever
-    {
+    forever {
         int ret = avcodec_decode_video2(codecCtx, frame, &got_picture, &packet);
-        if (ret < 0)
-        {
+        if (ret < 0) {
             qDebug() << "decode  failed";
             return ret;
         }
-        if (got_picture)
-        {
+        if (got_picture) {
             write_out_frame();
             qDebug() << "Succeed to decode 1 frame ! Frame pts: " << packet.pts;
-        }
-        else
-        {
+        } else {
             break;
         }
     }

@@ -1,9 +1,8 @@
 TEMPLATE = subdirs
 SUBDIRS = \
-    YUV
-#    YUV \
-#    YUVDecoding \
-#    RGBToH264 \
+    demos/YUVToH264 \
+    demos/YUVFromH264
+#    demos/RGBToH264
 #    Convert \
 #    Muxing  \
 #    Remuxing \

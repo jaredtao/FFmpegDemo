@@ -2,6 +2,5 @@ Makefile
 .qmake.cache
 .qmake.super
 *.pro.user*
-/bin/win64/NinjaPlayer.pdb
-/bin/win64/NinjaPlayer.exe
+/bin
 *.ilk

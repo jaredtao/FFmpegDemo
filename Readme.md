@@ -1,22 +1,48 @@
 ## FFMEPG DEMO
 
-####  学习FFMPEG的时候写的一些例子
+学习FFMPEG的时候写的一些示例
 
-* **YUV**
+## 目录结构
 
-  yuv转码h264
+|路径|用途|说明|
+|--|--|--|
+|3rdparty| 第三方库|主要是FFmpeg，当前版本为4.2.2，包含头文件和lib库|
+|bin| 运行路径|分别包含win32、win64、macos对应的ffmpeg 动态库|
+|demos|示例程序|统一使用FFmpegDemoConfig.pri做配置|
+|res|资源文件|包含yuv、mp4格式的视频文件，以及调用ffplay进行播放的一些脚本|
 
-* **YUVDecoding**
 
-  h264解码为yuv
+## 示例
+
+* **YUVToH264**
+
+    yuv转码h264
+  
+    不带参数时，默认将res/flower_cif.yuv 转码为res/flower_cif.h264
+
+* **YUVFromH264**
+
+    h264解码为yuv
+  
+    不带参数时，默认将res/flower_cif.h264 解码回到res/flower_cif_fromh264.yuv
+    
+    如果不存在flower_cif.h264文件，先运行一下YUVToH264示例
+    
+    可双击运行res/ffplay-flower.bat及res/ffplay-flower_fromh264.bat脚本进行对比
+
+* **RGBToH264**
+    
+    RGB转换为h264
+
+
+
+
+
+
 
 * **Capture**
 
   读取本地视频文件并播放 （这个可能不好用，直接看最后一个Player）
-
-* **RGBToH264**
-
-  RGB转换为h264
 
 * **Convert**
 

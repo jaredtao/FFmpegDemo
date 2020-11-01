@@ -40,7 +40,13 @@ void parseArgs(int argc, char *argv[])
 {
     if (argc < 1 || argv == nullptr)
     {
-        qDebug() << "parse args failed";
+        qDebug() << "parse args failed, use default";
+        Args.inputFileName = argv[1];
+        Args.outputFileName = argv[2];
+        Args.width = atoi(argv[3]);
+        Args.height = atoi(argv[4]);
+        Args.bitrate = atoi(argv[5]);
+        Args.frameToEncode = atoi(argv[6]);
         return;
     }
     Args.inputFileName = argv[1];

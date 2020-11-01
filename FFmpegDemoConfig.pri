@@ -29,4 +29,4 @@ LIBS += -lavcodec \
     -lswscale
 
 DESTDIR = $$BinPath
-DEFINES += ResPath=\"\\\"$${PWD}/res\\\"\"
+DEFINES += ResPath=\"\\\"$${PWD}/res/\\\"\"
