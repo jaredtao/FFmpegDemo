@@ -1,0 +1,6 @@
+[submodule "3rdparty/TaoCommon"]
+	path = 3rdparty/TaoCommon
+	url = https://gitee.com/jaredtao/TaoCommon
+[submodule "3rdparty/TaoQuick"]
+	path = 3rdparty/TaoQuick
+	url = https://gitee.com/jaredtao/TaoQuick

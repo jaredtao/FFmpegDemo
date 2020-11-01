@@ -96,7 +96,7 @@ int main(int argc, char *argv[])
         return OPEN_FILE_FAILED;
     }
 
-    av_register_all();
+//    av_register_all();
 
     codec = avcodec_find_encoder(AV_CODEC_ID_H264);
     if (codec == NULL)
