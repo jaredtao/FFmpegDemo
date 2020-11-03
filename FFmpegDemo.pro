@@ -7,7 +7,9 @@ SUBDIRS = \
 #    demos/Muxing  \
 #    demos/Remuxing \
 #    demos/Capture \
-    demos/Player
+#    demos/Player
+    tools
+
 OTHER_FILES += .* \
     _clang-format \
     LICENSE \
