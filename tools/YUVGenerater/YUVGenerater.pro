@@ -4,12 +4,16 @@ CONFIG += console c++17 utf8_source
 
 SOURCES += main.cpp
 
-libyuvInclude=E:/Dev/Tools/libyuv/include
-libyuvBin=E:/Dev/Tools/libyuv-install/bin/Debug
+libYuvInstallPath=E:/Tools/libyuv/install/
+#libYuvInstallPath=E:/Dev/Tools/libyuv-install/
+
+
+libyuvInclude=$${libYuvInstallPath}include
+libyuvBin=$${libYuvInstallPath}bin/Debug
 CONFIG(debug,debug|release){
-    libyuvBin=E:/Dev/Tools/libyuv-install/bin/Debug
+    libyuvBin=$${libYuvInstallPath}bin/Debug
 } else {
-    libyuvBin=E:/Dev/Tools/libyuv-install/bin/Release
+    libyuvBin=$${libYuvInstallPath}bin/Release
 }
 INCLUDEPATH += $$libyuvInclude
 LIBS += -L$$libyuvBin
