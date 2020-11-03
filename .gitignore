@@ -4,3 +4,4 @@ Makefile
 *.pro.user*
 /bin
 *.ilk
+.vs

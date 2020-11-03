@@ -128,9 +128,9 @@ public:
         int pos = 0;
         for (int i = 0; i < h; ++i) {
             for (int j = 0; j < w; ++j) {
-                buffer.data()[pos] = pBuf[j * w * 3 + i + 2];
-                buffer.data()[pos + 1] = pBuf[j * w * 3 + i + 1];
-                buffer.data()[pos+ 2] = pBuf[j * w * 3 + i ];
+                buffer.data()[pos] = pBuf[i * w * 3 + j * 3 + 2];
+                buffer.data()[pos + 1] = pBuf[i * w * 3 + j * 3+ 1];
+                buffer.data()[pos+ 2] = pBuf[i * w * 3 + j * 3 ];
                 pos += 3;
             }
         }
