@@ -33,8 +33,8 @@ struct BMPInfoHeader
 using wstring = std::wstring;
 using ofstream = std::ofstream;
 using ios = std::ios;
-
-int saveBMP(uint8_t *pBGR24Buf, int w, int h, const wstring &fileName)
+//RGB24 little endian (bgr in memory) to bmp
+int saveBMP(uint8_t *pRGB24Buf, int w, int h, const wstring &fileName)
 {
     BMPFileHeader fileHeader;
     BMPInfoHeader infoHeader;
@@ -46,7 +46,7 @@ int saveBMP(uint8_t *pBGR24Buf, int w, int h, const wstring &fileName)
 
     infoHeader.infoSize = sizeof(BMPInfoHeader);
     infoHeader.width = w;
-    infoHeader.height = -h;
+    infoHeader.height = -h; //flip
     infoHeader.planes = 1;
     infoHeader.bitCount = 24;
     infoHeader.imageSize = dataSize;
@@ -57,7 +57,7 @@ int saveBMP(uint8_t *pBGR24Buf, int w, int h, const wstring &fileName)
     }
     out.write((const char *)&fileHeader, sizeof fileHeader);
     out.write((const char *)&infoHeader, sizeof infoHeader);
-    out.write((const char *)pBGR24Buf, infoHeader.imageSize);
+    out.write((const char *)pRGB24Buf, infoHeader.imageSize);
     return 0;
 }
 

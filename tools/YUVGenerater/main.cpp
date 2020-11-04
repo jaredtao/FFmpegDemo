@@ -39,27 +39,10 @@ void parseArgs(int argc, wchar_t **argv)
     gArgs.height = stoi(argv[3]);
     gArgs.bitrate = stoi(argv[4]);
 }
-int wmain(int argc, wchar_t *argv[])
+
+void toBMP(const CharBuffer &buffer)
 {
-    wcout << resPath << endl;
-    wcout << sizeof(BMPFileHeader) << " " << sizeof(BMPInfoHeader) << endl;
-    parseArgs(argc, argv);
-    wcout << gArgs;
-
-    ifstream in(gArgs.inputFileName, ios::in | ios::binary | ios::ate);
-    if (!in.is_open()) {
-        wcout << "open file failed " << gArgs.inputFileName << endl;
-        return 0;
-    }
-    int size = in.tellg();
-    Buffer<char> buffer;
-    buffer.reserve(size);
-    buffer.fill(0);
-    in.seekg(0, ios::beg);
-    in.read(buffer.data(), size);
-
-    in.close();
-
+    int size = buffer.size();
     int yuvFrameSize = gArgs.width * gArgs.height * 1.5;
     int frameCount = size / yuvFrameSize;
     int rgbFrameSize = gArgs.width * gArgs.height * 3;
@@ -70,6 +53,7 @@ int wmain(int argc, wchar_t *argv[])
     int rgbStride = gArgs.width * 3;
     Buffer<uint8_t> rgbBuf;
     rgbBuf.reserve(rgbFrameSize);
+    //gen bmp for all frame
 
     for (int f = 0; f < frameCount; ++f) {
         rgbBuf.fill(0);
@@ -84,7 +68,6 @@ int wmain(int argc, wchar_t *argv[])
 
         if (ret) {
             wcout << "I420ToRGB24 failed " << ret << endl;
-            return 0;
         }
 
         wstringstream wss;
@@ -92,7 +75,64 @@ int wmain(int argc, wchar_t *argv[])
         auto name = wss.str();
         saveBMP(rgbBuf.data(), gArgs.width, gArgs.height, resPath + name);
     }
-    //}
+}
+void toI422(const CharBuffer &buffer)
+{
 
+
+}
+void toI444(const CharBuffer &buffer)
+{
+
+
+}
+void toI411(const CharBuffer &buffer)
+{
+
+
+}
+void toNV12(const CharBuffer &buffer)
+{
+
+
+}
+void toNV21(const CharBuffer &buffer)
+{
+
+
+}
+void toYUY2(const CharBuffer &buffer)
+{
+
+
+}
+void toUYVY(const CharBuffer &buffer)
+{
+
+
+}
+int wmain(int argc, wchar_t *argv[])
+{
+    wcout << resPath << endl;
+    wcout << sizeof(BMPFileHeader) << " " << sizeof(BMPInfoHeader) << endl;
+    parseArgs(argc, argv);
+    wcout << gArgs;
+
+    ifstream in(gArgs.inputFileName, ios::in | ios::binary | ios::ate);
+    if (!in.is_open()) {
+        wcout << "open file failed " << gArgs.inputFileName << endl;
+        return 0;
+    }
+    uint32_t size = in.tellg();
+    CharBuffer buffer;
+    buffer.reserve(size);
+    buffer.fill(0);
+    in.seekg(0, ios::beg);
+    in.read(buffer.data(), size);
+
+    in.close();
+
+//    toBMP(buffer);
+    toI422(buffer);
     return 0;
 }

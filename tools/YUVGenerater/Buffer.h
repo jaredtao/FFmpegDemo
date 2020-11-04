@@ -1,5 +1,7 @@
 #pragma once
+#include <cstdint>
 template<class char_type>
+
 class Buffer
 {
 public:
@@ -43,7 +45,7 @@ public:
         memset(pBuf, value, mCapacity);
         mSize = mCapacity;
     }
-    char_type *data() { return pBuf; }
+    char_type *data() const { return pBuf; }
     const char_type *constData() const { return pBuf; }
     int size() const { return mSize; }
     int capacity() const { return mCapacity; }
@@ -62,4 +64,5 @@ private:
     int mCapacity = 0;
 };
 
-
+using CharBuffer = Buffer<char>;
+using U8Buffer = Buffer<uint8_t>;
