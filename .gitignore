@@ -6,3 +6,4 @@ Makefile
 *.ilk
 .vs
 .vscode
+*.bmp

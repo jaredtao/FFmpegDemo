@@ -2,6 +2,7 @@
 #include <string>
 #include <string_view>
 #include <fstream>
+#include <sstream>
 #include "libyuv.h"
 #include "Buffer.h"
 #include "BMP.h"
@@ -21,7 +22,6 @@ wostream &operator<<(wostream &wout, const Args &args)
          << endl;
     return wout;
 }
-
 
 static const wstring resPath = ResPath;
 void parseArgs(int argc, wchar_t **argv)
@@ -60,32 +60,38 @@ int wmain(int argc, wchar_t *argv[])
 
     in.close();
 
-    int frameCount = size / (gArgs.width * gArgs.height * 1.5);
-
-    char *pY = buffer.data();
-    char *pU = buffer.data() + gArgs.width * gArgs.height ;
-    char *pV = buffer.data() + gArgs.width * gArgs.height
-            + gArgs.width * gArgs.height / 4;
-
-    Buffer<uint8_t> rgbBuf;
-    rgbBuf.reserve(gArgs.width * gArgs.height * 3 * frameCount);
-    rgbBuf.fill(0);
+    int yuvFrameSize = gArgs.width * gArgs.height * 1.5;
+    int frameCount = size / yuvFrameSize;
+    int rgbFrameSize = gArgs.width * gArgs.height * 3;
 
     int yStride = gArgs.width;
     int uStride = gArgs.width / 2;
     int vStride = gArgs.width / 2;
     int rgbStride = gArgs.width * 3;
-    // for (int i = 0; i < frameCount; ++i) {
-    int ret = libyuv::I420ToRGB24((uint8_t *)pY, yStride, (uint8_t *)pU, uStride, (uint8_t *)pV,
-                                  vStride, rgbBuf.data(), rgbStride, gArgs.width, gArgs.height);
+    Buffer<uint8_t> rgbBuf;
+    rgbBuf.reserve(rgbFrameSize);
 
-    if (ret) {
-        wcout << "I420ToRGB24 failed " << ret << endl;
-        return 0;
+    for (int f = 0; f < frameCount; ++f) {
+        rgbBuf.fill(0);
+        int yuvFrameOffset = f * yuvFrameSize;
+        char *pY = buffer.data() + yuvFrameOffset;
+        char *pU = pY + gArgs.width * gArgs.height;
+        char *pV = pU + gArgs.width * gArgs.height / 4;
+
+        // for (int i = 0; i < frameCount; ++i) {
+        int ret = libyuv::I420ToRGB24((uint8_t *)pY, yStride, (uint8_t *)pU, uStride, (uint8_t *)pV,
+                                      vStride, rgbBuf.data(), rgbStride, gArgs.width, gArgs.height);
+
+        if (ret) {
+            wcout << "I420ToRGB24 failed " << ret << endl;
+            return 0;
+        }
+
+        wstringstream wss;
+        wss << "flower_" << f << ".bmp";
+        auto name = wss.str();
+        saveBMP(rgbBuf.data(), gArgs.width, gArgs.height, resPath + name);
     }
-    BMPSaver bmp(rgbBuf.data(), gArgs.width, gArgs.height);
-
-    bmp.save(resPath + L"flower.bmp");
     //}
 
     return 0;

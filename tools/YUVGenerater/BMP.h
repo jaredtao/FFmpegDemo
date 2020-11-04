@@ -30,71 +30,35 @@ struct BMPInfoHeader
 };
 #pragma pack()
 
-class BMPSaver
+using wstring = std::wstring;
+using ofstream = std::ofstream;
+using ios = std::ios;
+
+int saveBMP(uint8_t *pBGR24Buf, int w, int h, const wstring &fileName)
 {
-public:
-    using wstring = std::wstring;
-    using ofstream = std::ofstream;
-    using ios = std::ios;
-
-    BMPSaver(uint8_t *pBuf, int w, int h)
-    {
-        int padSize = (4 - (w * 3) % 4) % 4;
-        int dataSize = w * h * 3 + h * padSize;
-        fileHeader.fileSize = sizeof(BMPFileHeader) + sizeof(BMPInfoHeader) + dataSize;
-        fileHeader.fileOffset = sizeof(BMPFileHeader) + sizeof(BMPInfoHeader);
-
-        infoHeader.infoSize = sizeof(BMPInfoHeader);
-        infoHeader.width = w;
-        infoHeader.height = -h;
-        infoHeader.planes = 1;
-        infoHeader.bitCount = 24;
-        infoHeader.imageSize = dataSize;
-
-        buffer.reserve(infoHeader.imageSize);
-        buffer.fill(0);
-
-        int pos = 0;
-        int srcR = 0;
-        int srcG = 0;
-        int srcB = 0;
-        int tarR = 0;
-        int tarG = 0;
-        int tarB = 0;
-        for (int i = 0; i < h; ++i) {
-            for (int j = 0; j < w; ++j) {
-                srcB = i * w * 3 + j * 3;
-                srcG = srcB + 1;
-                srcR = srcB + 2;
-
-                //bmp need BGR
-                tarB = pos;
-                tarG = pos + 1;
-                tarR = pos + 2;
-
-                buffer.data()[tarB] = pBuf[srcB];
-                buffer.data()[tarG] = pBuf[srcG];
-                buffer.data()[tarR] = pBuf[srcR];
-
-                pos += 3;
-            }
-        }
-    }
-    void save(const wstring &fileName)
-    {
-        ofstream out(fileName, ios::out | ios::binary);
-        if (!out.is_open()) {
-            return;
-        }
-        out.write((const char *)&fileHeader, sizeof fileHeader);
-        out.write((const char *)&infoHeader, sizeof infoHeader);
-        out.write((const char *)buffer.data(), infoHeader.imageSize);
-    }
-
-private:
     BMPFileHeader fileHeader;
     BMPInfoHeader infoHeader;
-    Buffer<uint8_t> buffer;
-};
+
+    int padSize = (4 - (w * 3) % 4) % 4;
+    int dataSize = w * h * 3 + h * padSize;
+    fileHeader.fileSize = sizeof(BMPFileHeader) + sizeof(BMPInfoHeader) + dataSize;
+    fileHeader.fileOffset = sizeof(BMPFileHeader) + sizeof(BMPInfoHeader);
+
+    infoHeader.infoSize = sizeof(BMPInfoHeader);
+    infoHeader.width = w;
+    infoHeader.height = -h;
+    infoHeader.planes = 1;
+    infoHeader.bitCount = 24;
+    infoHeader.imageSize = dataSize;
+
+    ofstream out(fileName, ios::out | ios::binary);
+    if (!out.is_open()) {
+        return -1;
+    }
+    out.write((const char *)&fileHeader, sizeof fileHeader);
+    out.write((const char *)&infoHeader, sizeof infoHeader);
+    out.write((const char *)pBGR24Buf, infoHeader.imageSize);
+    return 0;
+}
 
 }
