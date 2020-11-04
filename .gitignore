@@ -5,3 +5,4 @@ Makefile
 /bin
 *.ilk
 .vs
+.vscode

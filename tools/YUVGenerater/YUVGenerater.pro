@@ -4,8 +4,8 @@ CONFIG += console c++17 utf8_source
 
 SOURCES += main.cpp
 
-libYuvInstallPath=E:/Tools/libyuv/install/
-#libYuvInstallPath=E:/Dev/Tools/libyuv-install/
+#libYuvInstallPath=E:/Tools/libyuv/install/
+libYuvInstallPath=E:/Dev/Tools/libyuv-install/
 
 
 libyuvInclude=$${libYuvInstallPath}include
@@ -22,4 +22,8 @@ LIBS += -lyuv
 DESTDIR = $$libyuvBin
 
 resPath=$$clean_path($$PWD/../../res/)
-DEFINES += ResPath=\"L\\\"$${resPath}\\\"\"
+DEFINES += ResPath=\"L\\\"$${resPath}/\\\"\"
+
+HEADERS += \
+    BMP.h \
+    Buffer.h
