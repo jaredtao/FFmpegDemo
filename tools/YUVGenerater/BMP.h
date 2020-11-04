@@ -63,18 +63,18 @@ public:
         int tarB = 0;
         for (int i = 0; i < h; ++i) {
             for (int j = 0; j < w; ++j) {
-                srcR = i * w * 3 + j * 3;
-                srcG = srcR + 1;
-                srcB = srcR + 2;
+                srcB = i * w * 3 + j * 3;
+                srcG = srcB + 1;
+                srcR = srcB + 2;
 
                 //bmp need BGR
                 tarB = pos;
                 tarG = pos + 1;
                 tarR = pos + 2;
 
-                buffer.data()[tarR] = pBuf[srcR];
-                buffer.data()[tarG] = pBuf[srcG];
                 buffer.data()[tarB] = pBuf[srcB];
+                buffer.data()[tarG] = pBuf[srcG];
+                buffer.data()[tarR] = pBuf[srcR];
 
                 pos += 3;
             }

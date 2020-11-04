@@ -27,7 +27,7 @@ static const wstring resPath = ResPath;
 void parseArgs(int argc, wchar_t **argv)
 {
     if (argc <= 4 || argv == nullptr) {
-        cerr << "parse args failed, use default";
+        cerr << "parse args failed, use default ";
         gArgs.inputFileName = resPath + L"flower_cif.yuv";
         gArgs.width = 352;
         gArgs.height = 288;
