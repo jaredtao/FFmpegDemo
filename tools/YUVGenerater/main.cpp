@@ -6,6 +6,7 @@
 #include "libyuv.h"
 #include "Buffer.h"
 #include "BMP.h"
+#include <fmt/format.h>
 using namespace BMP;
 using namespace std;
 
@@ -69,10 +70,7 @@ void toBMP(const CharBuffer &buffer)
         if (ret) {
             wcout << "I420ToRGB24 failed " << ret << endl;
         }
-
-        wstringstream wss;
-        wss << "flower_" << f << ".bmp";
-        auto name = wss.str();
+        auto name = fmt::format(L"flower_{1}.bmp", f);
         saveBMP(rgbBuf.data(), gArgs.width, gArgs.height, resPath + name);
     }
 }

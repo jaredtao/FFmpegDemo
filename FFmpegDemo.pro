@@ -13,6 +13,7 @@ SUBDIRS = \
 OTHER_FILES += .* \
     _clang-format \
     LICENSE \
-    Readme.md
+    Readme.md \
+    mkspecs/features/*.prf
 
 

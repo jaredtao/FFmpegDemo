@@ -3,3 +3,5 @@ SUBDIRS =
 win32 {
     SUBDIRS += YUVGenerater
 }
+
+
