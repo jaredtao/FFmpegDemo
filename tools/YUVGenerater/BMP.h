@@ -58,6 +58,7 @@ int saveBMP(uint8_t *pRGB24Buf, int w, int h, const wstring &fileName)
     out.write((const char *)&fileHeader, sizeof fileHeader);
     out.write((const char *)&infoHeader, sizeof infoHeader);
     out.write((const char *)pRGB24Buf, infoHeader.imageSize);
+    out.close();
     return 0;
 }
 

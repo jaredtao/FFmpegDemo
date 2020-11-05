@@ -1,31 +1,26 @@
 TEMPLATE = app
 CONFIG -= qt
-CONFIG += console c++17 utf8_source
+CONFIG += console c++2z utf8_source
 
 
-
-#libYuvInstallPath=E:/Tools/libyuv/install/
-libYuvInstallPath=E:/Dev/Tools/libyuv-install/
-
-
-libyuvInclude=$${libYuvInstallPath}include
-libyuvBin=$${libYuvInstallPath}bin/Debug
-CONFIG(debug,debug|release){
-    libyuvBin=$${libYuvInstallPath}bin/Debug
-} else {
-    libyuvBin=$${libYuvInstallPath}bin/Release
+BinPath = $${FFMPEGDemo_SOURCE_TREE}/bin/win64
+win32 {
+    contains(QT_ARCH, x86_64) {
+        BinPath = $${FFMPEGDemo_SOURCE_TREE}/bin/win64
+    } else {
+        BinPath = $${FFMPEGDemo_SOURCE_TREE}/bin/win32
+    }
 }
-
-INCLUDEPATH += $$libyuvInclude
-LIBS += -L$$libyuvBin
-LIBS += -lyuv
-
-DESTDIR = $$libyuvBin
+macos {
+    BinPath = $${FFMPEGDemo_SOURCE_TREE}/bin/macos
+}
+DESTDIR = $$BinPath
 
 load(vcpkg)
-useVcpkgLib(fmt)
+#useVcpkgLib(fmt yuv)
+useVcpkgLib(yuv)
 
-resPath=$$clean_path($$PWD/../../res/)
+resPath=$$clean_path($${FFMPEGDemo_SOURCE_TREE}/res)
 DEFINES += ResPath=\"L\\\"$${resPath}/\\\"\"
 
 HEADERS += \

@@ -1,4 +1,5 @@
 defineTest(useVcpkgLib) {
+
     names=$$eval(1)
     isEmpty(names) {
         message( names is empty)
@@ -8,6 +9,7 @@ defineTest(useVcpkgLib) {
         vcpkgRoot=$$clean_path($$(VCPKG_ROOT))
         vcpkgTriplet=$$(VCPKG_DEFAULT_TRIPLET)
         vcpkgInstall=
+        vcpkgBin=
         exists($$vcpkgRoot) {
             isEmpty($$vcpkgTriplet) {
                 equals(QT_ARCH, x86) {
@@ -23,18 +25,19 @@ defineTest(useVcpkgLib) {
             INCLUDEPATH += $$vcpkgInstall/include
             CONFIG(debug,debug|release){
                 LIBS += -L$$vcpkgInstall/debug/lib
+                LIBS += -L$$vcpkgInstall/debug/bin
             } else {
                 LIBS += -L$$vcpkgInstall/lib
+                LIBS += -L$$vcpkgInstall/bin
             }
         }
+        # todo copy dll to destdir
+        for(libName, names) {
+            tname = $$qt5LibraryTarget($$libName)
+            LIBS += -l$$tname
+        }
+        export(INCLUDEPATH)
+        export(LIBS)
     }
-    # todo copy dll to destdir
-#    for(libName, names) {
-#        tname = $$qtLibraryTarget($$libName)
-#        message(lib $$libName $$tname)
-
-#    }
-    export(INCLUDEPATH)
-    export(LIBS)
     return(true)
 }
