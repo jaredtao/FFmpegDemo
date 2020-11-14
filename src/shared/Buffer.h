@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
-template<class char_type>
 
+template<class char_type>
 class Buffer
 {
 public:

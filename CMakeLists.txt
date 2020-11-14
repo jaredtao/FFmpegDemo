@@ -1,0 +1,57 @@
+﻿cmake_minimum_required(VERSION 3.14)
+get_filename_component(CurrentFolderName ${CMAKE_CURRENT_SOURCE_DIR} NAME)
+
+project (${CurrentFolderName} C CXX)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+SET(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+
+# use c++11
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+if (MSVC)
+    add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
+    add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zc:wchar_t")
+endif()
+
+if (NOT PROJECT_BINARY_DIR)
+	set(PROJECT_BINARY_DIR ${PROJECT_SOURCE_DIR}/build)
+endif()
+if (WIN32)
+    message(STATUS "plaftorm is windows")
+    if(CMAKE_CL_64)
+        set (EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin/win64)
+        set (LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin/win64)
+    else()
+        set (EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin/win32)
+        set (LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin/win32)
+    endif()
+elseif(APPLE)
+    message(STATUS "plaftorm is Apple systems")
+    set (EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin/macos)
+    set (LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin/macos)
+elseif(UNIX)
+    message(STATUS "plaftorm is UNIX-like OS's ")
+    set (EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin/unix)
+    set (LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin/unix)
+endif()
+message("EXECUTABLE_OUTPUT_PATH ${EXECUTABLE_OUTPUT_PATH}")
+message("LIBRARY_OUTPUT_PATH ${LIBRARY_OUTPUT_PATH}")
+
+set(ResourcePath "${PROJECT_SOURCE_DIR}/res/" CACHE STRING "RESOURCE path")
+
+add_compile_definitions(ResPath=L"${ResourcePath}/")
+
+message("ResourcePath ${ResourcePath}")
+if (NOT CMAKE_BUILD_TYPE) 
+    set(CMAKE_BUILD_TYPE "Debug")
+endif()
+message("Build Type " ${CMAKE_BUILD_TYPE})
+
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+add_subdirectory(3rdparty)
+add_subdirectory(src)
+

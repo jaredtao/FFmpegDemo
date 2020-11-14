@@ -7,3 +7,5 @@ Makefile
 .vs
 .vscode
 *.bmp
+out
+build

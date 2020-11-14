@@ -1,48 +1,56 @@
-﻿#include <QDebug>
-#include <QFile>
-#include <stdlib.h>
-
-//#include "stdint.h"
+﻿#include <cstdlib>
+#include <string>
+#include <iostream>
+#include <fstream>
+#include <fmt/format.h>
 
 extern "C" {
 #include <libavcodec/avcodec.h>
 #include <libavformat/avformat.h>
 #include <libavutil/imgutils.h>
 }
-#include "errcode.h"
 
-namespace YUV {
+using std::string;
+using std::wstring;
+using std::wostream;
+using std::wostream;
+using std::wstring;
+using std::stoi;
 
-struct _Args
+using std::wcout;
+using std::wcerr;
+using std::endl;
+
+struct Args
 {
-    QString inputFileName;
-    QString outputFileName;
+    wstring inputFileName;
+    wstring outputFileName;
     int width;
     int height;
     int bitrate;
     int frameToEncode;
 } gArgs;
-QDebug operator<<(QDebug dbg, const _Args &args)
+
+wostream &operator<<(wostream &wout, const Args &args)
 {
-    QDebugStateSaver saver(dbg);
-    dbg.noquote() << args.inputFileName << args.outputFileName << args.width << args.height
+    wout << args.inputFileName << args.outputFileName << args.width << args.height
                   << args.bitrate << args.frameToEncode;
-    return dbg;
+    return wout;
 }
 
 static AVCodec *codec = nullptr;
 static AVCodecContext *codecCtx = nullptr;
 static AVFrame *frame = nullptr;
 static AVPacket packet;
-static QFile inFile;
-static QFile outFile;
 
-void parseArgs(int argc, char *argv[])
+static const wstring resPath = ResPath;
+
+void parseArgs(int argc, wchar_t *argv[])
 {
     if (argc <= 6 || argv == nullptr) {
-        qDebug() << "parse args failed, use default";
-        gArgs.inputFileName = QString(ResPath) + QString("flower_cif.yuv");
-        gArgs.outputFileName = QString(ResPath) + QString("flower_cif.h264");
+        wcerr << L"parse args failed, use default" << endl;
+        gArgs.inputFileName = resPath + L"flower_cif.yuv";
+        gArgs.outputFileName = resPath + L"flower_cif.h264";
         gArgs.width = 352;
         gArgs.height = 288;
         gArgs.bitrate = 30412000;
@@ -51,10 +59,10 @@ void parseArgs(int argc, char *argv[])
     }
     gArgs.inputFileName = argv[1];
     gArgs.outputFileName = argv[2];
-    gArgs.width = atoi(argv[3]);
-    gArgs.height = atoi(argv[4]);
-    gArgs.bitrate = atoi(argv[5]);
-    gArgs.frameToEncode = atoi(argv[6]);
+    gArgs.width = stoi(argv[3]);
+    gArgs.height = stoi(argv[4]);
+    gArgs.bitrate = stoi(argv[5]);
+    gArgs.frameToEncode = stoi(argv[6]);
 }
 
 static int read_yuv_data(int color)
@@ -75,7 +83,7 @@ static int read_yuv_data(int color)
     }
     return color_size;
 }
-} // namespace YUV
+
 
 int main(int argc, char *argv[])
 {
