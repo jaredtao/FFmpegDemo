@@ -1,7 +1,18 @@
-set(FFmpegPath ${CMAKE_CURRENT_SOURCE_DIR}/FFmpeg CACHE STRING "FFmpegPath")
-set(FFmpegIncludePath ${FFmpegPath}/include CACHE STRING "FFmpegIncludePath")
+#find_package(FFMPEG)
+message ("FFMPEG_LIBRARIES ${FFMPEG_LIBRARIES}")
+if(NOT FFMPEG_FOUND)
+    if (WIN32)
+        set(FFmpegPath ${CMAKE_CURRENT_SOURCE_DIR}/FFmpeg CACHE STRING "FFmpegPath")
+        set(FFMPEG_INCLUDE_DIRS ${FFmpegPath}/include CACHE STRING "FFmpegIncludePath")
+        if(CMAKE_CL_64)
+            set (FFMPEG_LIBRARY_DIRS ${FFmpegPath}/lib/win64)
+        else()
+            set (FFMPEG_LIBRARY_DIRS ${FFmpegPath}/lib/win32)
+        endif()
+        
+        set(FFMPEG_LIBRARIES avdevice avformat avcodec avfilter avutil postproc swresample swscale CACHE STRING "")
+        set(FFMPEG_INCLUDE_DIRS ${FFMPEG_INCLUDE_DIRS} CACHE STRING "")
+        set(FFMPEG_LIBRARY_DIRS ${FFMPEG_LIBRARY_DIRS} CACHE STRING "")
 
-message("FFmpegIncludePath ${FFmpegIncludePath}")
-
-
-
+    endif()    
+endif()

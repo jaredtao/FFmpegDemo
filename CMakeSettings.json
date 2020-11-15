@@ -11,11 +11,6 @@
       "buildCommandArgs": "",
       "ctestCommandArgs": "",
       "variables": [
-        {
-          "name": "FFmpegLibPath",
-          "value": "E:/Dev/AudioVideo/FFmpegDemo/3rdparty/FFmpeg/lib/win64",
-          "type": "STRING"
-        }
       ]
     }
   ]

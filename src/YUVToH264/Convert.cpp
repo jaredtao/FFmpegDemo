@@ -33,7 +33,7 @@ void Convert::convert(const Args &args)
         return;
     }
     in.seekg(0, ios::end);
-    int size = in.tellg();
+    int size = (int)in.tellg();
     in.seekg(0, ios::beg);
     int yuvFrameSize = (int)(args.width * args.height * 1.5);
     int frameCount = size / yuvFrameSize;
