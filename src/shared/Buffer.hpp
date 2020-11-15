@@ -1,25 +1,24 @@
 #pragma once
-#include <cstdint>
 
-template<class char_type>
+template<class CharType>
 class Buffer
 {
 public:
-    Buffer(const char_type *buf, int size)
+    Buffer(const CharType *buf, int size) noexcept
     {
         init(size);
 
         memcpy(pBuf, buf, size);
         mSize = size;
     }
-    Buffer() { }
-    ~Buffer()
+    Buffer() noexcept { }
+    ~Buffer() noexcept
     {
         delete[] pBuf;
         mSize = 0;
         mCapacity = 0;
     }
-    void setData(const char_type *buf, int size)
+    void setData(const CharType *buf, int size) noexcept
     {
         if (mCapacity < size) {
             delete[] pBuf;
@@ -28,11 +27,11 @@ public:
         memcpy(pBuf, buf, size);
         mSize = size;
     }
-    void reserve(int capacity)
+    void reserve(int capacity) noexcept
     {
         if (capacity > mCapacity) {
             mCapacity = capacity;
-            char_type *newBuf = new char_type[mCapacity];
+            CharType *newBuf = new CharType[mCapacity];
             memset(newBuf, 0, mCapacity);
 
             memcpy(newBuf, pBuf, mSize);
@@ -40,29 +39,30 @@ public:
             pBuf = newBuf;
         }
     }
-    void fill(char_type value)
+    void fill(CharType value) noexcept
     {
         memset(pBuf, value, mCapacity);
         mSize = mCapacity;
     }
-    char_type *data() const { return pBuf; }
-    const char_type *constData() const { return pBuf; }
-    int size() const { return mSize; }
-    int capacity() const { return mCapacity; }
+    CharType *data() const noexcept { return pBuf; }
+    const CharType *constData() const noexcept { return pBuf; }
+    int size() const noexcept { return mSize; }
+    int capacity() const noexcept { return mCapacity; }
 
 private:
-    void init(int size)
+    void init(int size) noexcept
     {
         mCapacity = size;
-        pBuf = new char_type[mCapacity];
+        pBuf = new CharType[mCapacity];
         memset(pBuf, 0, mCapacity);
     }
 
 private:
-    char_type *pBuf = nullptr;
+    CharType *pBuf = nullptr;
     int mSize = 0;
     int mCapacity = 0;
 };
 
 using CharBuffer = Buffer<char>;
-using U8Buffer = Buffer<uint8_t>;
+using UCharBuffer = Buffer<unsigned char>;
+using Uint8Buffer = Buffer<uint8_t>;

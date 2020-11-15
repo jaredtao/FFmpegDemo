@@ -1,5 +1,4 @@
-#include "Buffer.h"
-//#include <cstddef>
+#include "Buffer.hpp"
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -22,8 +21,9 @@ bool readFile(CharBuffer &buffer, const std::wstring &fileName)
     in.close();
     return true;
 }
-template<typename char_type>
-bool writeFile(const Buffer<char_type> &buffer, const std::wstring &fileName)
+
+template<typename CharType>
+bool writeFile(const Buffer<CharType> &buffer, const std::wstring &fileName)
 {
     using namespace std;
     ofstream out;
@@ -32,7 +32,7 @@ bool writeFile(const Buffer<char_type> &buffer, const std::wstring &fileName)
         wcout << "open file failed " << fileName << endl;
         return false;
     }
-    out.write((char *)buffer.data(), buffer.size());
+    out.write((const char *)buffer.data(), buffer.size());
     out.close();
     return true;
 }

@@ -4,15 +4,8 @@ file(GLOB_RECURSE allHeaders  *.h *.hpp)
 
 find_package(libyuv CONFIG REQUIRED)
 
-include_directories(SYSTEM ${sharedSourcePath})
-
-link_directories(${sharedSourcePath})
-
 add_executable(${baseName} ${allSrc} ${allHeaders} ${sharedFiles})
 
-
 target_link_libraries(${baseName} PRIVATE yuv)
-
-
 
 add_test(NAME ${baseName} COMMAND ${baseName})

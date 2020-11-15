@@ -2,7 +2,7 @@
 #include <cstdint>
 #include <fstream>
 #include <string>
-#include "Buffer.h"
+#include "Buffer.hpp"
 namespace BMP {
 
 #pragma pack(1)
@@ -30,12 +30,15 @@ struct BMPInfoHeader
 };
 #pragma pack()
 
-using wstring = std::wstring;
-using ofstream = std::ofstream;
-using ios = std::ios;
+
 //RGB24 little endian (bgr in memory) to bmp
-int saveBMP(uint8_t *pRGB24Buf, int w, int h, const wstring &fileName)
+
+int saveBMP(uint8_t *pRGB24Buf, int w, int h, const std::wstring &fileName)
 {
+    using std::ios;
+    using std::ofstream;
+    using std::wstring;
+
     BMPFileHeader fileHeader;
     BMPInfoHeader infoHeader;
 
@@ -46,7 +49,7 @@ int saveBMP(uint8_t *pRGB24Buf, int w, int h, const wstring &fileName)
 
     infoHeader.infoSize = sizeof(BMPInfoHeader);
     infoHeader.width = w;
-    infoHeader.height = -h; //flip
+    infoHeader.height = -h; // flip
     infoHeader.planes = 1;
     infoHeader.bitCount = 24;
     infoHeader.imageSize = dataSize;

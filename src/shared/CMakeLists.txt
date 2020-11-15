@@ -1,5 +1,6 @@
-aux_source_directory(. allSrc)
 file(GLOB_RECURSE allHeaders  *.h *.hpp)
-
-set(sharedSourcePath ${CMAKE_CURRENT_SOURCE_DIR} CACHE STRING "sharedSourcePath")
-set(sharedFiles ${allSrc} ${allHeaders} CACHE STRING "sharedFiles")
+file(GLOB_RECURSE allSrc *.c *.cpp)
+set(sharedHeaders ${allHeaders} CACHE STRING "sharedHeaders")
+set(sharedFiles ${allSrc} CACHE STRING "sharedFiles")
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+message("sharedFiles ${sharedFiles}")

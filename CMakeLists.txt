@@ -10,7 +10,7 @@ SET(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 # use c++11
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 if (MSVC)
     add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
     add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
@@ -43,7 +43,7 @@ message("LIBRARY_OUTPUT_PATH ${LIBRARY_OUTPUT_PATH}")
 
 set(ResourcePath "${PROJECT_SOURCE_DIR}/res/" CACHE STRING "RESOURCE path")
 
-add_compile_definitions(ResPath=L"${ResourcePath}/")
+add_compile_definitions(ResPath=L"${ResourcePath}")
 
 message("ResourcePath ${ResourcePath}")
 if (NOT CMAKE_BUILD_TYPE) 
