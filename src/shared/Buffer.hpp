@@ -1,5 +1,5 @@
 #pragma once
-
+#include<cstdint>
 template<class CharType>
 class Buffer
 {

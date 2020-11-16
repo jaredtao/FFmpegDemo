@@ -1,16 +1,18 @@
 #include "Buffer.hpp"
 #include <fstream>
 #include <iostream>
+#include <ios>
 #include <string>
-
-bool readFile(CharBuffer &buffer, const std::wstring &fileName)
+#include <filesystem>
+bool readFile(CharBuffer &buffer, const std::string &fileName)
 {
     using namespace std;
 
     ifstream in;
-    in.open(fileName, ios::in | ios::binary | ios::ate);
+    filesystem::path path(fileName);
+    in.open(path.string(), ios::in | ios::binary | ios::ate);
     if (!in) {
-        wcout << "open file failed " << fileName << endl;
+        cout << "open file failed " << fileName << endl;
         return false;
     }
     uint32_t size = (int)in.tellg();
@@ -23,13 +25,14 @@ bool readFile(CharBuffer &buffer, const std::wstring &fileName)
 }
 
 template<typename CharType>
-bool writeFile(const Buffer<CharType> &buffer, const std::wstring &fileName)
+bool writeFile(const Buffer<CharType> &buffer, const std::string &fileName)
 {
     using namespace std;
     ofstream out;
-    out.open(fileName, ios::out | ios::binary);
+    filesystem::path path(fileName);
+    out.open(path.string(), ios::out | ios::binary);
     if (!out) {
-        wcout << "open file failed " << fileName << endl;
+        cout << "open file failed " << fileName << endl;
         return false;
     }
     out.write((const char *)buffer.data(), buffer.size());

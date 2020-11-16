@@ -1,12 +1,10 @@
 #include "Convert.h"
 #include "shared/FileIO.hpp"
 #include <iostream>
-
+#include <filesystem>
 using std::cerr;
 using std::cout;
 using std::endl;
-using std::wcerr;
-using std::wcout;
 
 Convert::Convert() { }
 
@@ -22,14 +20,16 @@ void Convert::convert(const Args &args)
     if (false == init(args)) {
         return;
     }
-    in.open(args.inputFileName, ios::in | ios::binary | ios::ate);
+    filesystem::path inPath(args.inputFileName);
+    in.open(inPath.string(), ios::in | ios::binary | ios::ate);
     if (!in) {
-        wcerr << "open file failed " << args.inputFileName << endl;
+        cerr << "open file failed " << args.inputFileName << endl;
         return;
     }
-    out.open(args.outputFileName, ios::out | ios::binary);
+    filesystem::path outPath(args.outputFileName);
+    out.open(outPath.string(), ios::out | ios::binary);
     if (!out) {
-        wcerr << "open file failed " << args.outputFileName << endl;
+        cerr << "open file failed " << args.outputFileName << endl;
         return;
     }
     in.seekg(0, ios::end);

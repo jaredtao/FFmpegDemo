@@ -3,15 +3,15 @@
 #include <string>
 struct Args
 {
-    std::wstring inputFileName;
-    std::wstring outputFileName;
+    std::string inputFileName;
+    std::string outputFileName;
     int width;
     int height;
     int bitrate;
     int frameToEncode;
 };
-static std::wostream &operator<<(std::wostream &wout, const Args &args)
+static std::ostream &operator<<(std::ostream &out, const Args &args)
 {
-    wout << args.inputFileName << " " << args.outputFileName << " " << args.width << " " << args.height << " " << args.bitrate << " " << args.frameToEncode;
-    return wout;
+    out << args.inputFileName << " " << args.outputFileName << " " << args.width << " " << args.height << " " << args.bitrate << " " << args.frameToEncode;
+    return out;
 }

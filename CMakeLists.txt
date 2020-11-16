@@ -14,7 +14,8 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 if (MSVC)
     add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
     add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zc:wchar_t")
+    add_definitions(-DUNICODE -D_UNICODE)
+    #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zc:wchar_t")
 endif()
 
 if (NOT PROJECT_BINARY_DIR)
@@ -43,7 +44,7 @@ message("LIBRARY_OUTPUT_PATH ${LIBRARY_OUTPUT_PATH}")
 
 set(ResourcePath "${PROJECT_SOURCE_DIR}/res/" CACHE STRING "RESOURCE path")
 
-add_compile_definitions(ResPath=L"${ResourcePath}")
+add_compile_definitions(ResPath="${ResourcePath}")
 
 message("ResourcePath ${ResourcePath}")
 if (NOT CMAKE_BUILD_TYPE) 

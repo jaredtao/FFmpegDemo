@@ -1,7 +1,7 @@
 Makefile
 .qmake.cache
 .qmake.super
-*.pro.user*
+*.user
 /bin
 *.ilk
 .vs

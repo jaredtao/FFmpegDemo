@@ -33,11 +33,10 @@ struct BMPInfoHeader
 
 //RGB24 little endian (bgr in memory) to bmp
 
-int saveBMP(uint8_t *pRGB24Buf, int w, int h, const std::wstring &fileName)
+int saveBMP(uint8_t *pRGB24Buf, int w, int h, const std::string &fileName)
 {
     using std::ios;
     using std::ofstream;
-    using std::wstring;
 
     BMPFileHeader fileHeader;
     BMPInfoHeader infoHeader;
