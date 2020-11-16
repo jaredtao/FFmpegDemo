@@ -9,31 +9,37 @@
 using namespace BMP;
 
 using std::endl;
-using std::wcerr;
-using std::wcout;
+using std::cerr;
+using std::cout;
 
 using std::wostream;
 
 using std::stoi;
 
 using std::string;
-using std::wstring;
 
 static Args gArgs;
-static const wstring resPath = ResPath;
+static const string resPath = ResPath;
 
-void parseArgs(int argc, wchar_t **argv)
+void parseArgs(int argc, char **argv)
 {
-    if (argc <= 4 || argv == nullptr) {
-        wcerr << L"parse args failed, use default " << endl;
-        gArgs.inputFileName = resPath + L"flower_cif.yuv";
-        gArgs.outputFileName = L"flower_cif";
+    if (argc <= 1 || argv == nullptr) { 
+        cerr << "parse args failed, use default " << endl;
+        gArgs.inputFileName = resPath + "flower_cif.yuv";
+        gArgs.outputFileName = resPath + "flower_cif";
         gArgs.width = 352;
         gArgs.height = 288;
         gArgs.bitrate = 30412000;
         return;
+
     }
-    gArgs.inputFileName = resPath + argv[1];
+    if (argc < 4 || argv == nullptr) {
+        cout << "Usage: YUVGenerater inputFileName width height bitrate" << endl;
+        cout << "       Example: YUVGenerater /dev/flower_cif.yuv 352 288 30412000" << endl;
+        return;
+    }
+    gArgs.inputFileName = argv[1];
+    gArgs.outputFileName = gArgs.inputFileName.substr(0, gArgs.inputFileName.length() - 4);
     gArgs.width = stoi(argv[2]);
     gArgs.height = stoi(argv[3]);
     gArgs.bitrate = stoi(argv[4]);
@@ -65,10 +71,10 @@ void toBMP(const CharBuffer &buffer)
                                       gArgs.height);
 
         if (ret) {
-            wcout << "I420ToRGB24 failed " << ret << endl;
+            cout << "I420ToRGB24 failed " << ret << endl;
         }
-        wchar_t fileName[1024];
-        swprintf(fileName, 1024, L"%s_%d.bmp", gArgs.outputFileName.c_str(), i);
+        char fileName[1024];
+        snprintf(fileName, 1024, "%s_%d.bmp", gArgs.outputFileName.c_str(), i);
 
         saveBMP(rgbBuf.data(), gArgs.width, gArgs.height, fileName);
     }
@@ -102,8 +108,8 @@ void toI444(const CharBuffer &buffer)
         libyuv::I420ToI444(srcY, srcYStride, srcU, srcUStride, srcV, srcVStride, dstY, dstYStride, dstU, dstUStride, dstV, dstVStride, gArgs.width,
                            gArgs.height);
     }
-    wchar_t fileName[1024];
-    swprintf(fileName, 1024, L"%s%s.i444", resPath.c_str(), gArgs.outputFileName.c_str());
+    char fileName[1024];
+    snprintf(fileName, 1024, "%s.i444", gArgs.outputFileName.c_str());
     writeFile(dstBuf, fileName);
 }
 void toI422(const CharBuffer &buffer)
@@ -135,8 +141,8 @@ void toI422(const CharBuffer &buffer)
         libyuv::I420ToI422(srcY, srcYStride, srcU, srcUStride, srcV, srcVStride, dstY, dstYStride, dstU, dstUStride, dstV, dstVStride, gArgs.width,
                            gArgs.height);
     }
-    wchar_t fileName[1024];
-    swprintf(fileName, 1024, L"%s%s.i422", resPath.c_str(), gArgs.outputFileName.c_str());
+    char fileName[1024];
+    snprintf(fileName, 1024, "%s.i422", gArgs.outputFileName.c_str());
     writeFile(dstBuf, fileName);
 }
 void toYUY2(const CharBuffer &buffer)
@@ -164,8 +170,8 @@ void toYUY2(const CharBuffer &buffer)
         uint8_t *dst = dstBuf.data() + i * dstFrameSize;
         libyuv::I420ToYUY2(srcY, srcYStride, srcU, srcUStride, srcV, srcVStride, dst, dstStride, gArgs.width, gArgs.height);
     }
-    wchar_t fileName[1024];
-    swprintf(fileName, 1024, L"%s%s.yuy2", resPath.c_str(), gArgs.outputFileName.c_str());
+    char fileName[1024];
+    snprintf(fileName, 1024, "%s.yuy2", gArgs.outputFileName.c_str());
     writeFile(dstBuf, fileName);
 }
 void toUYVY(const CharBuffer &buffer)
@@ -193,8 +199,8 @@ void toUYVY(const CharBuffer &buffer)
         uint8_t *dst = dstBuf.data() + i * dstFrameSize;
         libyuv::I420ToUYVY(srcY, srcYStride, srcU, srcUStride, srcV, srcVStride, dst, dstStride, gArgs.width, gArgs.height);
     }
-    wchar_t fileName[1024];
-    swprintf(fileName, 1024, L"%s%s.uyvy", resPath.c_str(), gArgs.outputFileName.c_str());
+    char fileName[1024];
+    snprintf(fileName, 1024, "%s.uyvy", gArgs.outputFileName.c_str());
     writeFile(dstBuf, fileName);
 }
 void toNV12(const CharBuffer &buffer)
@@ -224,8 +230,8 @@ void toNV12(const CharBuffer &buffer)
         uint8_t *dstUV = dstY + gArgs.width * gArgs.height;
         libyuv::I420ToNV12(srcY, srcYStride, srcU, srcUStride, srcV, srcVStride, dstY, dstYStride, dstUV, dstUVStride, gArgs.width, gArgs.height);
     }
-    wchar_t fileName[1024];
-    swprintf(fileName, 1024, L"%s%s.nv12", resPath.c_str(), gArgs.outputFileName.c_str());
+    char fileName[1024];
+    snprintf(fileName, 1024, "%s.nv12", gArgs.outputFileName.c_str());
     writeFile(dstBuf, fileName);
 }
 void toNV21(const CharBuffer &buffer)
@@ -255,17 +261,17 @@ void toNV21(const CharBuffer &buffer)
         uint8_t *dstUV = dstY + gArgs.width * gArgs.height;
         libyuv::I420ToNV21(srcY, srcYStride, srcU, srcUStride, srcV, srcVStride, dstY, dstYStride, dstUV, dstUVStride, gArgs.width, gArgs.height);
     }
-    wchar_t fileName[1024];
-    swprintf(fileName, 1024, L"%s%s.nv21", resPath.c_str(), gArgs.outputFileName.c_str());
+    char fileName[1024];
+    snprintf(fileName, 1024, "%s.nv21", gArgs.outputFileName.c_str());
     writeFile(dstBuf, fileName);
 }
 
-int wmain(int argc, wchar_t *argv[])
+int main(int argc, char *argv[])
 {
-    // wcout << resPath << endl;
-    // wcout << sizeof(BMPFileHeader) << " " << sizeof(BMPInfoHeader) << endl;
+    // cout << resPath << endl;
+    // cout << sizeof(BMPFileHeader) << " " << sizeof(BMPInfoHeader) << endl;
     parseArgs(argc, argv);
-    wcout << gArgs << endl;
+    cout << gArgs << endl;
     CharBuffer buffer;
     if (!readFile(buffer, gArgs.inputFileName)) {
         return 0;
