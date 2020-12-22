@@ -2,10 +2,10 @@ aux_source_directory(. allSrc)
 get_filename_component(baseName ${CMAKE_CURRENT_SOURCE_DIR} NAME)
 file(GLOB_RECURSE allHeaders  *.h *.hpp)
 
-find_package(libyuv CONFIG REQUIRED)
-
 add_executable(${baseName} ${allSrc} ${allHeaders})
-
-target_link_libraries(${baseName} PRIVATE yuv)
-
+if (CMAKE_BUILD_TYPE MATCHES "Release")
+    target_link_libraries(${baseName} PRIVATE yuv)
+else()
+    target_link_libraries(${baseName} PRIVATE yuvd)
+endif()
 add_test(NAME ${baseName} COMMAND ${baseName})
