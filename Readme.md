@@ -1,8 +1,8 @@
-## FFMEPG DEMO
+# FFMEPG DEMO
 
 学习FFMPEG的时候写的一些示例
 
-#### License
+## License
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/wentaojia2014/TaoJson/blob/master/LICENSE)
 
 ## 目录结构
@@ -15,6 +15,7 @@
 |res|资源文件|包含yuv、mp4格式的视频文件，以及调用ffplay进行播放的一些脚本|
 
 ## 示例
+
 * **YUVGenerater**
     
     yuv数据生成器
@@ -23,13 +24,17 @@
 
     用法见命令行参数。默认处理res/flower_cif.yuv文件，生成res/flower_cif.i420等文件。
 
-    可以通过res/ffplay-flower-i420.bat等脚本，播放生成的文件
+    可以通过res/ffplay-flower-i420.bat等脚本，播放生成的文件.
+
+    通过此例，熟悉I420 和其它数据格式的转换。 详细的yuv文档可以参考 [yuv](doc/yuv.md)
 
 * **YUVToH264**
 
     yuv转码h264
   
     不带参数时，默认将res/flower_cif.yuv 转码为res/flower_cif.h264
+
+    目前包括 YUVToH264-FFmpeg  和 YUVToH264-Libx264 两个，分别使用FFmpeg 和Libx264.
 
 * **YUVFromH264**
 

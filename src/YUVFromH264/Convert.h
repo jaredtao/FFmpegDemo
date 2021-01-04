@@ -3,9 +3,9 @@
 #include <fstream>
 
 extern "C" {
-#include <cstdint>
-#include <cstdio>
-#include "x264.h"
+#include <libavcodec/avcodec.h>
+#include <libavformat/avformat.h>
+#include <libavutil/imgutils.h>
 }
 class Convert
 {
@@ -18,13 +18,12 @@ private:
     bool init(const Args &args);
     void unInit();
 
-    void read_yuv420p_to_pic(int color, int w, int h);
+    void read_yuv420p_to_frame(int color, int w, int h);
 private:
-    x264_param_t param = {};
-    x264_picture_t pic = {};
-    x264_picture_t pic_out = {};
-    x264_t *encoder = nullptr;
-
+    AVCodec *codec = nullptr;
+    AVCodecContext *codecCtx = nullptr;
+    AVFrame *frame = nullptr;
+    AVPacket packet;
     bool inited = false;
 
     std::ifstream in;

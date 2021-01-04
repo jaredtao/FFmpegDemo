@@ -18,7 +18,7 @@ static const string resPath = ResPath;
 void parseArgs(int argc, char **argv)
 {
     if (argc <= 6 || argv == nullptr) {
-        cerr << L"parse args failed, use default" << endl;
+        cerr << "parse args failed, use default" << endl;
         gArgs.inputFileName = resPath + "flower_cif.yuv";
         gArgs.outputFileName = resPath + "flower_cif.h264";
         gArgs.width = 352;
